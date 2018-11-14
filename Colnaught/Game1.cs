@@ -19,6 +19,10 @@ namespace Colnaught
         Vector3 Camera = new Vector3(0, 0, 0);
         float zoom = 100;
 
+        Point MouseDragStart;
+        bool MouseDraging;
+
+        Point MouseDragScreenScrollStart;
 
 
         Point Screen_Scroll;
@@ -109,9 +113,30 @@ namespace Colnaught
                 zoom += 1f;
 
             if (zoom < 1) zoom = 1;
-            
+
+            UI_MouseDrag();
 
             base.Update(gameTime);
+        }
+
+
+        void UI_MouseDrag()
+        {
+            if (Mouse.GetState().RightButton == ButtonState.Pressed)
+            {
+                if (!MouseDraging)
+                {
+                    MouseDraging = true;
+                    MouseDragStart = Screen_Scroll + Mouse.GetState().Position;
+                    MouseDragScreenScrollStart = Screen_Scroll;
+                }
+            }
+
+            if (MouseDraging)
+            {
+                Screen_Scroll = (MouseDragStart - Mouse.GetState().Position);
+                if (Mouse.GetState().RightButton != ButtonState.Pressed) MouseDraging = false;
+            }
         }
 
         /// <summary>
@@ -134,11 +159,14 @@ namespace Colnaught
             ScreenR.Y = Screen_Scroll.Y / 256;
             ScreenR.Width = 10; //(int)Math.Ceiling((double)Screen_Size.X / 128);
             ScreenR.Height = 10; //(int)Math.Ceiling((double)Screen_Size.Y / 256);
-            //ScreenR.Inflate(10, 10);
+                                 //ScreenR.Inflate(10, 10);            
 
-            sel_pos.X = ((Mouse.GetState().Position.X - 240) / 32) + ((Mouse.GetState().Position.X - 320) / 64);
-            sel_pos.Y = ((Mouse.GetState().Position.Y - 240) / 32) - ((Mouse.GetState().Position.Y - 320) / 64);
+            Vector2 mPos = new Vector2(Mouse.GetState().Position.X + Screen_Scroll.X, Mouse.GetState().Position.Y + Screen_Scroll.Y);
 
+            sel_pos.X = (float)Math.Floor((mPos.Y - 128) / 64F + (mPos.X - 128) / 128F);
+            sel_pos.Y = (float)Math.Floor((-mPos.X - 128) / 128F + (mPos.Y - 128) / 64F);
+
+            /*
             for (int x = ScreenR.Left; x < ScreenR.Right; x++)
                 for (int y = ScreenR.Top; y < ScreenR.Bottom; y++)
                 {
@@ -150,6 +178,18 @@ namespace Colnaught
                         spriteBatch.Draw(Tile, pos, Color.Red);
 
                 }            
+            */
+            for (int y = 0; y < 100; y++)
+                for (int x = 0; x < 100; x++)
+                {
+                    //pos.X = x * 64 - y * 64 - (128 / 2) + Camera.X;
+                    pos.X = x * 64 - y * 64 - 64 - Screen_Scroll.X;
+                    pos.Y = y * 32 + x * 32 - Screen_Scroll.Y;                    
+                    spriteBatch.Draw(Tile, pos, Color.White);
+                    if (x == sel_pos.X && y == sel_pos.Y)
+                        spriteBatch.Draw(Tile, pos, Color.Red);
+                }
+
 
             //spriteBatch.Draw(Tile, new Rectangle(pos.X, pos.Y, 128, 256), new Rectangle(0, 0, 128, 256), Color.White);
             //spriteBatch.Draw(Tile, new Rectangle(pos.X + 128, pos.Y, 128, 256), new Rectangle(0, 0, 128, 256), Color.White);
