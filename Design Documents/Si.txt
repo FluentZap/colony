@@ -1,0 +1,148 @@
+The game is a sim city style game
+
+There are planets and you build in a square.
+Later planets could be bigger, more resources to colonize.
+Connecting to the edge of a square connects it to the neighbor.
+A connected city is added to the simulation.
+
+
+
+When you colonize a planet it gives you several layout options that change the way the city performs.
+Example Layout
+|-------|-------|
+|		|		|
+|		|		|
+|		|-------|
+|		|		|
+|		|		|
+|-------|-------|
+Areas can give boosts to resource extraction, Zone density, Output, Rare resources.
+Rare resources can be used to create special buildings.
+
+
+
+
+
+Specialized Cities
+Some are larger and allow for more population.
+
+And that turns into a Specialized Planet
+This will add to the ability of your empire
+Examples of Specializations
+
+Resources
+Energy
+Items
+Ships
+Technology
+People
+Wealth
+
+
+
+
+Population
+Jobs
+Products
+Commerce
+
+
+
+
+RSI Supply and demand.
+
+
+
+
+Population --- >  Jobs	[--- > 	Commerce 	--- > Population
+						[--- >	Products 	--- > Commerce
+						[--- >	Population
+
+
+Population Demand
+If it is positive people will move to the city into residential areas and fill the open housing.
+The people are hard capped at the Commerce limit.
+
+Available Jobs will increase the Demand for Population
+Both Commerce and Industrial zones create Jobs
+
+
+---------------------------------------------
+--------------------Zones--------------------
+---------------------------------------------
+
+Residential Zones
+Create Housing for Population.
+
+Industry Zones
+Creates Jobs and uses them to produce Products.
+
+Commercial Zones
+Creates Jobs and uses Products to produce Commerce.
+
+---------------------------------------------
+------------------Resources------------------
+---------------------------------------------
+
+Population
+People that move to the city they need Housing and Commerce but produce Jobs.
+
+Jobs
+Are used by Industrial and Commercial Zones
+
+Products
+Created from Industrial Zones and Jobs
+
+Commerce
+Created from Commercial Zones, Products and Jobs
+
+
+
+
+
+
+
+Each Building is a single tile
+
+
+
+|=====|
+|  R  |
+|=====|
+
+
+
+
+A city center is built
+Everything that is in the city needs a connection to the city center
+That will connect it to the hub system of that city
+
+A city center can upgrade to allow higher density population, and advanced tech.
+As city centers upgrade they can take different paths that will specialize the center. 
+
+City centers need to be connected by Highways, Railways, other transit.
+They will bring resources back and forth between the areas.
+
+
+
+
+
+
+Every tile 3x out from the road is checked and added to the road network, Assumed that at some point the road is going to be used.
+The road holds the resources Jobs + Products + Commerce
+
+
+
+Faraxis VS SIMS
+
+
+Save 50% off the NEW 2X Dark Roast & 2X Vanilla Cappuccino Madrina's Coffees on the webstore using code ‘DAN’ at https://madrinascoffee.com/products (International Shipping is Available!)
+
+Spectacular
+White wolf 90 game
+Abborant 
+Necessary Evil with teh SW ruleset is about villains.
+
+Marvel Heroic pen and paper
+
+Face rip
