@@ -111,8 +111,13 @@ namespace Colnaught
                             {
                                 if (district.Area.Contains(new Point(x, y)))
                                 {
-                                    if (distrect.Contains(new Point(x, y)))                                    
-                                        MapTileColor = Color.LightGreen;
+                                    if (distrect.Contains(new Point(x, y)))
+                                    {
+                                        if (_city.TileMap[x, y].Buildable)
+                                            MapTileColor = Color.LightGreen;
+                                        else
+                                            MapTileColor = Color.LightSalmon;
+                                    }
                                     else
                                         MapTileColor = Color.CornflowerBlue;
                                 }                                    
@@ -134,20 +139,28 @@ namespace Colnaught
                 }
 
 
-            DrawInterface();
+            DrawInterface(sel_pos);
             spriteBatch.End();
             base.Draw(gameTime);
         }
 
 
 
-        void DrawInterface()
+        void DrawInterface(Point sel_pos)
         {
             foreach (var item in _interface.Dictionaryof_CityScreenButtons)
             {
                 if (item.Value.Type == Listof_ButtonType.Panel) spriteBatch.Draw(TileTexture[(int)Listof_Texture.Panel1], item.Value.Location, item.Value.color);
                 if (item.Value.Type == Listof_ButtonType.Button) spriteBatch.Draw(TileTexture[(int)Listof_Texture.Button1], item.Value.Location, item.Value.color);
             }
+
+            if (_city.CityArea.Contains(sel_pos))
+            {
+                spriteBatch.DrawString(basicfont, "Transfer Jobs: " + _city.TileMap[sel_pos.X, sel_pos.Y].Traffic.OriginJobs_Transfer.ToString(), new Vector2(0, 0), Color.White);
+                spriteBatch.DrawString(basicfont, "Jobs: " + _city.TileMap[sel_pos.X, sel_pos.Y].Traffic.OriginJobs.ToString(), new Vector2(0, 20), Color.White);
+            }
+            
+
         }
 
 

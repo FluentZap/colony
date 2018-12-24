@@ -16,8 +16,9 @@ namespace Colnaught
         Commercial,
         Industrial,
         Road,
-        Residential_1,
-
+        Residential_Structure,
+        Commercial_Structure,
+        Industrial_Structure,
 
 
         Panel1 = 300,
@@ -42,6 +43,8 @@ namespace Colnaught
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        SpriteFont basicfont;
+
         float theta;
         Model model;
         Model model2;
@@ -49,7 +52,7 @@ namespace Colnaught
 
         Vector3 Camera = new Vector3(0, 0, 0);
 
-        float zoom = 1.0f;
+        float zoom = 0.5f;
 
         Point MouseDragStart;
         bool MouseDraging;
@@ -125,15 +128,18 @@ namespace Colnaught
             TileTexture[(int)Listof_Texture.Commercial] = Content.Load<Texture2D>("Commercial");
             TileTexture[(int)Listof_Texture.Industrial] = Content.Load<Texture2D>("Industrial");
 
-            TileTexture[(int)Listof_Texture.Residential_1] = Content.Load<Texture2D>("Residential_1");
+            TileTexture[(int)Listof_Texture.Residential_Structure] = Content.Load<Texture2D>("Residential_1");
+            TileTexture[(int)Listof_Texture.Commercial_Structure] = Content.Load<Texture2D>("Commercial_1");
+            TileTexture[(int)Listof_Texture.Industrial_Structure] = Content.Load<Texture2D>("Industrial_1");
 
             model = Content.Load<Model>("CityCenter");
             model2 = Content.Load<Model>("Tower1");
-
+            basicfont = Content.Load<SpriteFont>("romulus");
 
             _interface = new Interface(Screen_Size);
-            _city = new City(new Point(200, 200));
             _e = new Encyclopedia();
+            _city = new City(new Point(200, 200), _e);
+            
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -187,6 +193,7 @@ namespace Colnaught
             if (count >= 10)
             {
                 _city.Calculate_Growth();
+                _city.Calculate_Traffic();
                 count = 0;
             }
             count++;

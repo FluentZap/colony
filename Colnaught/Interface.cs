@@ -382,6 +382,18 @@ namespace Colnaught
                                 }
                             }
 
+                        BuildRect.Inflate(4, 4);
+                        for (int x = BuildRect.Left; x < BuildRect.Right; x++)
+                            for (int y = BuildRect.Top; y < BuildRect.Bottom; y++)
+                            {
+                                if (_city.CityArea.Contains(new Point(x, y)))
+                                {
+                                    if (_city.TileMap[x, y].Type == Listof_Structures.Grass)
+                                        _city.TileMap[x, y].Buildable = true;
+                                    else
+                                        _city.TileMap[x, y].Buildable = false;
+                                }
+                            }
                         MouseLeftClicked = false;
                         if (Keyboard.GetState().IsKeyUp(Keys.LeftShift) && Keyboard.GetState().IsKeyUp(Keys.RightShift))
                             MouseMode = Listof_MouseMode.Default;
