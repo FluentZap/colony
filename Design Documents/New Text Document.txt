@@ -9,7 +9,7 @@ Highways, Railways and other large scale transportation are used to connect dist
 
 
 
-
+Pull in a planet with a later machine
 
 
 
@@ -58,8 +58,19 @@ Population --- >  Jobs	[--- > 	Commerce 	--- > Population
 						[--- >	Population
 
 
+Tech Level of Population
+Different buildings train population to higher tech levels.
 
-
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
 
 Road Networks
 
@@ -100,3 +111,73 @@ They can then be transported to industry buildings that process into stuff.
 
 
 Buildings and education levels,
+
+
+
+
+
+
+Residential
+Commercial
+Industrial
+
+
+
+Town Centers
+	RCI
+	
+	
+A district is built as a standard Level 1 District.
+Can upgrade into a Level 2 District, 
+
+Specialized Districts for RCI
+
+
+local (2-lane roads)
+connecting (4- and 6-lanes)
+regional (highways) 
+there's really a fourth level, national
+
+
+
+
+
+
+Three Traffic Maps
+	Jobs
+	Commercial
+	Products
+
+
+Residential
+	+Jobs Traffic
+	+Commercial Traffic
+		
+Commercial
+	-Commercial Traffic
+	-Jobs Traffic
+	-Products Traffic
+
+Industrial
+	+Products Traffic
+	-Jobs Traffic
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+Traffic Maps Crawl from Point of Highest Traffic
+The Traffic 
+
+Starts a Route
+Route adds all traffic to it that it touches stops at traffic 0, Then starts a crawl at another point.
+Adds as Output/Input
+
+Set's the Traffic to what the last was 
+
