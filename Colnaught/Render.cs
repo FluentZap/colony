@@ -158,6 +158,9 @@ namespace Colnaught
             {
                 spriteBatch.DrawString(basicfont, "Transfer Jobs: " + _city.TileMap[sel_pos.X, sel_pos.Y].Traffic.OriginJobs_Transfer.ToString(), new Vector2(0, 0), Color.White);
                 spriteBatch.DrawString(basicfont, "Jobs: " + _city.TileMap[sel_pos.X, sel_pos.Y].Traffic.OriginJobs.ToString(), new Vector2(0, 20), Color.White);
+                spriteBatch.DrawString(basicfont, "Tier: " + _city.TileMap[sel_pos.X, sel_pos.Y].Traffic.tier.ToString(), new Vector2(0, 40), Color.White);
+
+                spriteBatch.DrawString(basicfont, "Type: " + _city.TileMap[sel_pos.X, sel_pos.Y].Type.ToString(), new Vector2(0, 60), Color.White);
             }
             
 

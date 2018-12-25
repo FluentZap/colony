@@ -9,6 +9,7 @@ namespace Colnaught
 
     enum Listof_BuildTypes
     {
+        Empty,
         Zone,
         Road,
         Structure,
@@ -17,6 +18,7 @@ namespace Colnaught
 
     enum Listof_ZoneType
     {
+        None,
         Residential,
         Commercial,
         Industrial
@@ -28,7 +30,7 @@ namespace Colnaught
         public int Cost;
         public Listof_BuildTypes BuildingType;
         public Listof_Texture Texture;
-        public Listof_ZoneType ZoneType;
+        public Listof_ZoneType ZoneType = Listof_ZoneType.None;
 
     }
 
@@ -42,7 +44,7 @@ namespace Colnaught
 
         public Encyclopedia()
         {
-            Dictionaryof_BuildItems.Add(Listof_Structures.Grass, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Zone, Texture = Listof_Texture.Grass });
+            Dictionaryof_BuildItems.Add(Listof_Structures.Grass, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Empty, Texture = Listof_Texture.Grass });
             Dictionaryof_BuildItems.Add(Listof_Structures.CityCenter, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.CityCenter, Texture = Listof_Texture.CityCenter });
             Dictionaryof_BuildItems.Add(Listof_Structures.ZoneResidential, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Zone, Texture = Listof_Texture.Residential, ZoneType = Listof_ZoneType.Residential });
             Dictionaryof_BuildItems.Add(Listof_Structures.ZoneCommercial, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Zone, Texture = Listof_Texture.Commercial, ZoneType = Listof_ZoneType.Commercial });
