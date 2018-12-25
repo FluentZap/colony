@@ -56,7 +56,7 @@ namespace Colnaught
     class Tile_Traffic
     {
         public Tile_Traffic Parent = null;
-
+        public int tier = 0;
         public int OriginJobs = 0;
         public int OriginCommerce = 0;
         public int OriginProducts = 0;
@@ -75,11 +75,22 @@ namespace Colnaught
         public int DestCommerce_Transfer = 0;
         public int DestProducts_Transfer = 0;
 
-        public bool Processed = false;
-        
+        public bool Processed = false;              
 
 
         public void AddToTransfer(Tile_Traffic Source)
+        {
+            OriginJobs_Transfer += Source.OriginJobs;
+            OriginCommerce_Transfer += Source.OriginCommerce;
+            OriginProducts_Transfer += Source.OriginProducts;
+
+            DestJobs_Transfer += Source.DestJobs;
+            DestCommerce_Transfer += Source.DestCommerce;
+            DestProducts_Transfer += Source.DestProducts;
+        }
+
+
+        public void AddToBoth(Tile_Traffic Source)
         {
             OriginJobs_Transfer += Source.OriginJobs + Source.OriginJobs_Transfer;
             OriginCommerce_Transfer += Source.OriginCommerce + Source.OriginCommerce_Transfer;
@@ -108,12 +119,13 @@ namespace Colnaught
             DestJobs_Transfer = 0;
             DestCommerce_Transfer = 0;
             DestProducts_Transfer = 0;
-        }
+            Parent = null;
+            tier = 0;
+        }        
 
 
     }
-
-
+    
 
 
     class City_Tyle
@@ -293,7 +305,7 @@ namespace Colnaught
                                 break;
                             }
 
-                            if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_1 && v > 8)
+                            if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_1 && v > 8 && TileMap[t.X, t.Y].Traffic.tier < 4)
                             {
                                 TileMap[t.X, t.Y].Type = Listof_Structures.Residential_2;
                                 TileMap[t.X, t.Y].SpriteIndex = 1;

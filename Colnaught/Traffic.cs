@@ -10,6 +10,20 @@ namespace Colnaught
     partial class City
     {
 
+
+
+        public void ProcessToParent(Tile_Traffic tile)
+        {
+            Tile_Traffic parent = tile.Parent;
+            while (parent != null)
+            {                
+                parent.AddToTransfer(tile);
+                tile = parent;
+                parent = tile.Parent;
+            }
+
+        }
+
         public void AddTransfurTraffic(City_Tyle Source, City_Tyle Top = null, City_Tyle Bottom = null, City_Tyle Left = null, City_Tyle Right = null)
         {
             int split = 0;
@@ -47,12 +61,17 @@ namespace Colnaught
             //First Pass set's all the traffic second pass adds traffic to roads           
             foreach (var district in districts)
             {
-                HashSet<Point> AddList = new HashSet<Point>();
+                Queue<Point> SearchList = new Queue<Point>();
+                
+                HashSet<Point> Finished = new HashSet<Point>();
+
 
                 for (int x = district.Area.Left; x < district.Area.Right; x++)
                     for (int y = district.Area.Top; y < district.Area.Bottom; y++)
                         TileMap[x, y].Traffic.Clear();
 
+
+                //Add traffic and get ConnectedList
                 for (int x = district.Area.Left; x < district.Area.Right; x++)
                     for (int y = district.Area.Top; y < district.Area.Bottom; y++)
                     {
@@ -147,67 +166,85 @@ namespace Colnaught
                         }
 
 
-                        //Check for Sourounding tiles for a road to add traffic to
-                        //If no road is found add traffic to Bottom/Right or both.
                         if (Traffic)
                         {
-                            bool RoadConnected = false;
+                            bool connected = false;
+                            //Check Top, Bottom, Left, Right                                
+                            //City_Tyle Top = null, Bottom = null, Left = null, Right = null;
 
-                            for (int x2 = x - 1; x2 < x + 1; x2++)
-                            {
-                                for (int y2 = y - 1; y2 < y + 1; y2++)
-                                {
-                                    if (x2 >= 0 && x2 <= CityArea.Width && y2 >= 0 && y2 <= CityArea.Height)
-                                    {
-                                        //Check if the tile is a road
-                                        if (_e.Dictionaryof_BuildItems[TileMap[x2, y2].Type].BuildingType == Listof_BuildTypes.Road)
-                                            RoadConnected = true;
-                                    }
-                                    if (RoadConnected) break;
-                                }
-                                if (RoadConnected) break;
-                            }
+                            if (y - 1 >= district.Area.Top)
+                                if (_e.Dictionaryof_BuildItems[TileMap[x, y - 1].Type].BuildingType == Listof_BuildTypes.Road)
+                                    connected = true;
 
-                            //AddTransfurTraffic(T, TileMap[x2, y2]);
+                            if (y + 1 <= district.Area.Bottom)
+                                if (_e.Dictionaryof_BuildItems[TileMap[x, y + 1].Type].BuildingType == Listof_BuildTypes.Road)
+                                    connected = true;
 
-                            //If the traffic is not connected to a road add it to it's neighbors evenly.
-                            if (!RoadConnected)
-                            {
-                                //Check Top, Bottom, Left, Right                                
-                                City_Tyle Top = null, Bottom = null, Left = null, Right = null;
+                            if (x - 1 >= district.Area.Left)
+                                if (_e.Dictionaryof_BuildItems[TileMap[x - 1, y].Type].BuildingType == Listof_BuildTypes.Road)
+                                    connected = true;
 
-                                if (y - 1 >= 0)
-                                    if (_e.Dictionaryof_BuildItems[TileMap[x, y - 1].Type].ZoneType == _e.Dictionaryof_BuildItems[T.Type].ZoneType)
-                                        Top = TileMap[x, y - 1];
+                            if (x + 1 <= district.Area.Right)
+                                if (_e.Dictionaryof_BuildItems[TileMap[x + 1, y].Type].BuildingType == Listof_BuildTypes.Road)
+                                    connected = true;
 
-                                if (y + 1 <= CityArea.Height)
-                                    if (_e.Dictionaryof_BuildItems[TileMap[x, y + 1].Type].ZoneType == _e.Dictionaryof_BuildItems[T.Type].ZoneType)
-                                        Bottom = TileMap[x, y + 1];
-
-                                if (x - 1 >= 0)
-                                    if (_e.Dictionaryof_BuildItems[TileMap[x - 1, y].Type].ZoneType == _e.Dictionaryof_BuildItems[T.Type].ZoneType)
-                                        Left = TileMap[x - 1, y];
-
-                                if (x + 1 <= CityArea.Width)
-                                    if (_e.Dictionaryof_BuildItems[TileMap[x + 1, y].Type].ZoneType == _e.Dictionaryof_BuildItems[T.Type].ZoneType)
-                                        Right = TileMap[x + 1, y];
-                                //If there is a conenction add trafic to them
-                                if (Top == null && Bottom == null && Left == null && Right == null)
-                                    T.Connected = false;
-                                else
-                                {
-                                    AddTransfurTraffic(T, Top, Bottom, Left, Right);
-                                    T.Traffic.Processed = true;
-                                }
-
-                            }
-
-
-
-
+                            //If there is a road conenction add to connected list
+                            if (connected)
+                                SearchList.Enqueue(new Point(x, y));
                         }
                     }
 
+                int tier = 0;
+                while (SearchList.Count() > 0)
+                {
+                    Point P = SearchList.Dequeue();
+                    Finished.Add(P);
+
+                    if (P.Y - 1 >= district.Area.Top)
+                        if (_e.Dictionaryof_BuildItems[TileMap[P.X, P.Y - 1].Type].ZoneType == _e.Dictionaryof_BuildItems[TileMap[P.X, P.Y].Type].ZoneType)
+                            if (!SearchList.Contains(new Point(P.X, P.Y - 1)) && !Finished.Contains(new Point(P.X, P.Y - 1)))
+                            {
+                                SearchList.Enqueue(new Point(P.X, P.Y - 1));
+                                TileMap[P.X, P.Y - 1].Traffic.Parent = TileMap[P.X, P.Y].Traffic;
+                                TileMap[P.X, P.Y - 1].Traffic.tier = TileMap[P.X, P.Y].Traffic.tier + 1;
+                                ProcessToParent(TileMap[P.X, P.Y - 1].Traffic);
+                            }
+
+                    if (P.Y + 1 <= district.Area.Bottom)
+                        if (_e.Dictionaryof_BuildItems[TileMap[P.X, P.Y + 1].Type].ZoneType == _e.Dictionaryof_BuildItems[TileMap[P.X, P.Y].Type].ZoneType)
+                            if (!SearchList.Contains(new Point(P.X, P.Y + 1)) && !Finished.Contains(new Point(P.X, P.Y + 1)))
+                            {
+                                SearchList.Enqueue(new Point(P.X, P.Y + 1));
+                                TileMap[P.X, P.Y + 1].Traffic.Parent = TileMap[P.X, P.Y].Traffic;
+                                TileMap[P.X, P.Y + 1].Traffic.tier = TileMap[P.X, P.Y].Traffic.tier + 1;
+                                ProcessToParent(TileMap[P.X, P.Y + 1].Traffic);
+                            }
+
+                    if (P.X - 1 >= district.Area.Left)
+                        if (_e.Dictionaryof_BuildItems[TileMap[P.X - 1, P.Y].Type].ZoneType == _e.Dictionaryof_BuildItems[TileMap[P.X, P.Y].Type].ZoneType)
+                            if (!SearchList.Contains(new Point(P.X - 1, P.Y)) && !Finished.Contains(new Point(P.X - 1, P.Y)))
+                            {
+                                SearchList.Enqueue(new Point(P.X - 1, P.Y));
+                                TileMap[P.X - 1, P.Y].Traffic.Parent = TileMap[P.X, P.Y].Traffic;
+                                TileMap[P.X - 1, P.Y].Traffic.tier = TileMap[P.X, P.Y].Traffic.tier + 1;
+                                ProcessToParent(TileMap[P.X - 1, P.Y].Traffic);
+                            }
+
+                    if (P.X + 1 <= district.Area.Right)
+                        if (_e.Dictionaryof_BuildItems[TileMap[P.X + 1, P.Y].Type].ZoneType == _e.Dictionaryof_BuildItems[TileMap[P.X, P.Y].Type].ZoneType)
+                            if (!SearchList.Contains(new Point(P.X + 1, P.Y)) && !Finished.Contains(new Point(P.X + 1, P.Y)))
+                            {
+                                SearchList.Enqueue(new Point(P.X + 1, P.Y));
+                                TileMap[P.X + 1, P.Y].Traffic.Parent = TileMap[P.X, P.Y].Traffic;
+                                TileMap[P.X + 1, P.Y].Traffic.tier = TileMap[P.X, P.Y].Traffic.tier + 1;
+                                ProcessToParent(TileMap[P.X + 1, P.Y].Traffic);
+                            }
+                    
+
+
+                }
+
+/*
                 //Seccond Pass, This adds the calculated traffic value to the road that connects to it
                 for (int x = district.Area.Left; x < district.Area.Right; x++)
                     for (int y = district.Area.Top; y < district.Area.Bottom; y++)
@@ -247,7 +284,7 @@ namespace Colnaught
 
                     }
 
-
+*/
             }
         }
     }
