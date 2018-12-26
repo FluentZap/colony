@@ -205,6 +205,7 @@ namespace Colnaught
                             if (!SearchList.Contains(new Point(P.X, P.Y - 1)) && !Finished.Contains(new Point(P.X, P.Y - 1)))
                             {
                                 SearchList.Enqueue(new Point(P.X, P.Y - 1));
+                                
                                 TileMap[P.X, P.Y - 1].Traffic.Parent = TileMap[P.X, P.Y].Traffic;
                                 TileMap[P.X, P.Y - 1].Traffic.tier = TileMap[P.X, P.Y].Traffic.tier + 1;
                                 ProcessToParent(TileMap[P.X, P.Y - 1].Traffic);
