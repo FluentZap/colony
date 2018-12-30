@@ -51,89 +51,99 @@ namespace Colnaught
                     pos.Y = y * 32 * zoom + x * 32 * zoom - Screen_Scroll.Y;
                     Rectangle rec = new Rectangle((int)sel_pos.X, (int)sel_pos.Y, 1, 1);
                     rec.Inflate(20, 20);
+
+                    Rectangle ScreenRect = new Rectangle(0, 0, Screen_Size.X, Screen_Size.Y);
+                    ScreenRect.Inflate(256, 128);
                     //if (rec.Contains(new Point(x, y)))
                     //{                        
                     //}
                     //else
 
-                    DrawMapTile = true;
-                    MapTileColor = Color.White;
-
-                    if (MouseMode == Listof_MouseMode.Building)
+                    //Need to make the tile loop perdicted
+                    if (ScreenRect.Contains(pos))
                     {
 
-                        foreach (var district in _city.districts)
-                            if (district.Area.Contains(sel_pos)) distrect = district.Area;
+                        DrawMapTile = true;
+                        MapTileColor = Color.White;
+
+                        if (MouseMode == Listof_MouseMode.Building)
+                        {
+
+                            foreach (var district in _city.districts)
+                                if (district.Area.Contains(sel_pos)) distrect = district.Area;
 
                             if (_e.Dictionaryof_BuildItems[Building].BuildingType == Listof_BuildTypes.Structure)
-                        {
-                            if (x == sel_pos.X && y == sel_pos.Y)
-                                spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.CornflowerBlue, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
-                        }
-
-                        if (_e.Dictionaryof_BuildItems[Building].BuildingType == Listof_BuildTypes.Zone || _e.Dictionaryof_BuildItems[Building].BuildingType == Listof_BuildTypes.Road)
-                        {
-                            if (x == sel_pos.X && y == sel_pos.Y)
                             {
-                                spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.CornflowerBlue, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
-                                DrawMapTile = false;
+                                if (x == sel_pos.X && y == sel_pos.Y)
+                                    spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.CornflowerBlue, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
                             }
-                            if (BuildRect.Contains(new Point(x, y)))
+
+                            if (_e.Dictionaryof_BuildItems[Building].BuildingType == Listof_BuildTypes.Zone || _e.Dictionaryof_BuildItems[Building].BuildingType == Listof_BuildTypes.Road)
                             {
-                                spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.CornflowerBlue, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
-                                DrawMapTile = false;
-                            }                                
-                        }
-
-
-                        if (_e.Dictionaryof_BuildItems[Building].BuildingType == Listof_BuildTypes.CityCenter)
-                        {
-                            Rectangle dist = new Rectangle(sel_pos.X, sel_pos.Y, 1, 1);
-                            dist.Inflate(20, 20);
-                            
-                            if (x == sel_pos.X && y == sel_pos.Y)
-                            {
-                                spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.CornflowerBlue, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
-                                DrawMapTile = false;
-                            }
-                            if (dist.Contains(new Point(x, y)))
-                                MapTileColor = Color.CornflowerBlue;                            
-                        }
-
-
-                        if (_city.districts.Count == 0)
-                            if (_e.Dictionaryof_BuildItems[Building].BuildingType != Listof_BuildTypes.CityCenter)
-                                MapTileColor = Color.LightSalmon;
-
-                        foreach (var district in _city.districts)
-                        {
-                            if (_e.Dictionaryof_BuildItems[Building].BuildingType != Listof_BuildTypes.CityCenter)
-                            {
-                                if (district.Area.Contains(new Point(x, y)))
+                                if (x == sel_pos.X && y == sel_pos.Y)
                                 {
-                                    if (distrect.Contains(new Point(x, y)))
-                                    {
-                                        if (_city.TileMap[x, y].Buildable)
-                                            MapTileColor = Color.LightGreen;
-                                        else
-                                            MapTileColor = Color.LightSalmon;
-                                    }
-                                    else
-                                        MapTileColor = Color.CornflowerBlue;
-                                }                                    
+                                    spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.CornflowerBlue, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
+                                    DrawMapTile = false;
+                                }
+                                if (BuildRect.Contains(new Point(x, y)))
+                                {
+                                    spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.CornflowerBlue, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
+                                    DrawMapTile = false;
+                                }
                             }
-                            else
+
+
+                            if (_e.Dictionaryof_BuildItems[Building].BuildingType == Listof_BuildTypes.CityCenter)
                             {
-                                if (district.Area.Contains(new Point(x, y)))
-                                    MapTileColor = Color.LightSalmon;
+                                Rectangle dist = new Rectangle(sel_pos.X, sel_pos.Y, 1, 1);
+                                dist.Inflate(20, 20);
+
+                                if (x == sel_pos.X && y == sel_pos.Y)
+                                {
+                                    spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.CornflowerBlue, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
+                                    DrawMapTile = false;
+                                }
+                                if (dist.Contains(new Point(x, y)))
+                                    MapTileColor = Color.CornflowerBlue;
                             }
+
+
+                            if (_city.districts.Count == 0)
+                                if (_e.Dictionaryof_BuildItems[Building].BuildingType != Listof_BuildTypes.CityCenter)
+                                    MapTileColor = Color.LightSalmon;
+
+                            foreach (var district in _city.districts)
+                            {
+                                if (_e.Dictionaryof_BuildItems[Building].BuildingType != Listof_BuildTypes.CityCenter)
+                                {
+                                    if (district.Area.Contains(new Point(x, y)))
+                                    {
+                                        if (distrect.Contains(new Point(x, y)))
+                                        {
+                                            if (_city.TileMap[x, y].Buildable)
+                                                MapTileColor = Color.LightGreen;
+                                            else
+                                                MapTileColor = Color.LightSalmon;
+                                        }
+                                        else
+                                            MapTileColor = Color.CornflowerBlue;
+                                    }
+                                }
+                                else
+                                {
+                                    if (district.Area.Contains(new Point(x, y)))
+                                        MapTileColor = Color.LightSalmon;
+                                }
+                            }
+
                         }
-                        
+
+                        if (DrawMapTile)
+                            spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[_city.TileMap[x, y].Type].Texture], pos, new Rectangle(0 + 128 * _city.TileMap[x, y].SpriteIndex, 0, 128, 256), MapTileColor, 0, new Vector2(), Tile_Size, SpriteEffects.None, 1);
+
+
                     }
 
-                    if (DrawMapTile)
-                        spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[_city.TileMap[x, y].Type].Texture], pos, new Rectangle(0 + 128 * _city.TileMap[x, y].SpriteIndex, 0, 128, 256), MapTileColor, 0, new Vector2(), Tile_Size, SpriteEffects.None, 1);
-                    
                     //if (x == sel_pos.X && y == sel_pos.Y)
                     //spriteBatch.Draw(TileTexture[(int)Listof_Texture.Grass], pos, null, Color.White, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
                 }
@@ -161,6 +171,9 @@ namespace Colnaught
                 spriteBatch.DrawString(basicfont, "Tier: " + _city.TileMap[sel_pos.X, sel_pos.Y].Traffic.tier.ToString(), new Vector2(0, 40), Color.White);
 
                 spriteBatch.DrawString(basicfont, "Type: " + _city.TileMap[sel_pos.X, sel_pos.Y].Type.ToString(), new Vector2(0, 60), Color.White);
+
+                spriteBatch.DrawString(basicfont, "ZoneID: " + _city.TileMap[sel_pos.X, sel_pos.Y].ZoneID.ToString(), new Vector2(0, 80), Color.White);
+                
             }
             
 

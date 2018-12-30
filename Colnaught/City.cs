@@ -56,6 +56,8 @@ namespace Colnaught
     class Tile_Traffic
     {
         public Tile_Traffic Parent = null;
+        public int ID = 0;
+
         public int tier = 0;
         public int OriginJobs = 0;
         public int OriginCommerce = 0;
@@ -73,9 +75,7 @@ namespace Colnaught
 
         public int DestJobs_Transfer = 0;
         public int DestCommerce_Transfer = 0;
-        public int DestProducts_Transfer = 0;
-
-        public bool Processed = false;              
+        public int DestProducts_Transfer = 0;        
 
 
         public void AddToTransfer(Tile_Traffic Source)
@@ -121,6 +121,7 @@ namespace Colnaught
             DestProducts_Transfer = 0;
             Parent = null;
             tier = 0;
+            ID = 0;
         }        
 
 
@@ -136,6 +137,8 @@ namespace Colnaught
         public int LandValue;
         public bool Buildable = false;
         public Tile_Traffic Traffic = new Tile_Traffic();
+        public int ZoneID = 0;        
+
         public bool Connected = true;
 
         public City_Tyle()
@@ -156,6 +159,9 @@ namespace Colnaught
         public int[] Jobs = new int[4];
         public int[] Comerce = new int[4];
         public int Products;
+
+        public Dictionary<int, Tile_Traffic> ZoneTraffic = new Dictionary<int, Tile_Traffic>();
+
 
         SortedDictionary<int, HashSet<Point>> TrafficPoints_Jobs = new SortedDictionary<int, HashSet<Point>>();
         SortedDictionary<int, HashSet<Point>> TrafficPoints_Commerce = new SortedDictionary<int, HashSet<Point>>();
