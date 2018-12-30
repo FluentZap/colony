@@ -218,17 +218,16 @@ namespace Colnaught
             {
                 if (Mouse.GetState().RightButton == ButtonState.Pressed) MouseRightClicked = true;
 
-                if (MouseRightClicked && Mouse.GetState().RightButton == ButtonState.Released)
-                {
+                //Cancel Selection
+                if (MouseRightClicked && Mouse.GetState().RightButton == ButtonState.Released)                
                     if (Math.Abs(MouseDragScreenScrollStart.X - Screen_Scroll.X) < 4 && Math.Abs(MouseDragScreenScrollStart.Y - Screen_Scroll.Y) < 4)
                     {
                         MouseRightClicked = false;
                         MouseLeftClicked = false;
                         MouseMode = Listof_MouseMode.Default;
                     }
-                }
                 
-
+                //Left Button has been Clicked
                 if (!onPanel && MouseLeftClicked == false && Mouse.GetState().LeftButton == ButtonState.Pressed)
                 {
                     MouseLeftClicked = true;
@@ -236,6 +235,8 @@ namespace Colnaught
                     BuildRectPoint = sel_pos;
                 }
 
+
+                //Assign Build Rectangle
                 if (!onPanel && MouseLeftClicked == true && Mouse.GetState().LeftButton == ButtonState.Pressed)
                 {
 
@@ -260,18 +261,26 @@ namespace Colnaught
                         BuildRect.Y = sel_pos.Y;
                         BuildRect.Height = BuildRectPoint.Y + 1 - sel_pos.Y;
                     }
-
-
                     //BuildRect.Width = sel_pos.X - BuildRect.X + 1;
                     //BuildRect.Height = sel_pos.Y - BuildRect.Y + 1;
                 }
 
 
-
+                //Build Item
                 if (MouseLeftClicked && Mouse.GetState().LeftButton == ButtonState.Released)
                 {
                     if (InsideDistrict(BuildRect))
                     {
+                        Rectangle CheckRect = BuildRect;
+                        CheckRect.Inflate(1, 1);
+                        for (int x = CheckRect.Left; x < CheckRect.Right; x++)
+                            for (int y = CheckRect.Top; y < CheckRect.Bottom; y++)
+                                if (_e.Dictionaryof_BuildItems[_city.TileMap[x, y].Type].ZoneType == _e.Dictionaryof_BuildItems[Building].ZoneType && _city.TileMap[x, y].ZoneID > 0)
+                                {
+                                    
+                                }
+
+
                         for (int x = BuildRect.Left; x < BuildRect.Right; x++)
                             for (int y = BuildRect.Top; y < BuildRect.Bottom; y++)
                             {
