@@ -179,7 +179,16 @@ namespace Colnaught
                 
 
             }
-            
+
+            foreach (var district in _city.districts)
+            {
+                spriteBatch.DrawString(basicfont, "Workers: " + district.Workers.ToString(), new Vector2(300, 0), Color.White);
+                spriteBatch.DrawString(basicfont, "Jobs: " + district.Jobs[0].ToString(), new Vector2(300, 20), Color.White);
+                spriteBatch.DrawString(basicfont, "JobMarket: " + district.JobMarket.ToString(), new Vector2(300, 40), Color.White);
+                spriteBatch.DrawString(basicfont, "Products: " + district.Products.ToString(), new Vector2(300, 60), Color.White);
+                spriteBatch.DrawString(basicfont, "Commerce: " + district.Commerce[0].ToString(), new Vector2(300, 80), Color.White);
+
+            }                                   
 
         }
 

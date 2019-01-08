@@ -194,6 +194,7 @@ namespace Colnaught
             {
                 _city.Calculate_Growth();
                 _city.Calculate_Traffic();
+                _city.Calculate_JPC();
                 count = 0;
             }
             count++;
