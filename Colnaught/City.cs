@@ -39,7 +39,7 @@ namespace Colnaught
         Residential_2,
         Residential_3,
         Residential_4,
-        Residential_5,        
+        Residential_5,
         Commercial_1,
         Commercial_2,
         Commercial_3,
@@ -51,7 +51,7 @@ namespace Colnaught
         Industrial_4,
         Industrial_5
     }
-    
+
 
     class Tile_Traffic
     {
@@ -75,7 +75,7 @@ namespace Colnaught
 
         public int DestJobs_Transfer = 0;
         public int DestCommerce_Transfer = 0;
-        public int DestProducts_Transfer = 0;        
+        public int DestProducts_Transfer = 0;
 
 
         public void AddToTransfer(Tile_Traffic Source, int Split)
@@ -122,11 +122,11 @@ namespace Colnaught
             Parent = null;
             tier = 0;
             ID = 0;
-        }        
+        }
 
 
     }
-    
+
 
 
     class City_Tyle
@@ -153,9 +153,9 @@ namespace Colnaught
         public void TrafficByConnection()
         {
             Traffic.Clear();
-            
+
             foreach (var item in RoadContacts)
-                if (item != null)                    
+                if (item != null)
                     Traffic.AddToTransfer(item.Traffic, item.ConnectedZones);
         }
 
@@ -171,15 +171,15 @@ namespace Colnaught
             if (ConnectedZones < 16)
             {
                 bool AlreadyAdded = false;
-                foreach (var item in RoadContacts)                
+                foreach (var item in RoadContacts)
                     if (item == Connection) AlreadyAdded = true;
-                
+
                 if (!AlreadyAdded)
                 {
                     RoadContacts[ConnectedZones] = Connection;
                     ConnectedZones++;
-                }                
-            }            
+                }
+            }
         }
 
 
@@ -193,13 +193,17 @@ namespace Colnaught
 
     class District
     {
-        public string Name;
+        public string Name;        
         public Rectangle Area;
         public SortedDictionary<int, HashSet<Point>> ValueList = new SortedDictionary<int, HashSet<Point>>();
         public int[] Population = new int[4];
         public int[] Jobs = new int[4];
-        public int[] Comerce = new int[4];
+        public int[] Commerce = new int[4];
         public int Products;
+
+
+        public int Workers = 0;
+        public double JobMarket = 0;
 
         public Dictionary<int, Tile_Traffic> ZoneTraffic = new Dictionary<int, Tile_Traffic>();
 
@@ -248,16 +252,16 @@ namespace Colnaught
                 ValueList.Add(x, new HashSet<Point>());
             }
             
-        }   
-        
+        }
+
 
         public void ClearJPC()
         {
-            for (int x = 0; x <= 4; x++)
+            for (int x = 0; x < 4; x++)
             {
                 Population[x] = 0;
                 Jobs[x] = 0;
-                Comerce[x] = 0;                
+                Commerce[x] = 0;
             }
             Products = 0;
         }
@@ -275,7 +279,7 @@ namespace Colnaught
 
     partial class City
     {
-        public Rectangle CityArea;        
+        public Rectangle CityArea;
         public City_Tyle[,] TileMap;
         public HashSet<District> districts;
         Encyclopedia _e;
@@ -288,12 +292,12 @@ namespace Colnaught
             this._e = _e;
 
             for (int x = 0; x < CitySize.X; x++)
-                for (int y = 0; y < CitySize.Y; y++)                
+                for (int y = 0; y < CitySize.Y; y++)
                     TileMap[x, y] = new City_Tyle();
-            
+
         }
 
-       
+
 
 
 
@@ -302,31 +306,54 @@ namespace Colnaught
             foreach (var district in districts)
             {
                 district.ClearJPC();
-
+                Tile_Traffic Traff = new Tile_Traffic();
                 for (int x = district.Area.Left; x < district.Area.Right; x++)
                     for (int y = district.Area.Top; y < district.Area.Bottom; y++)
                     {
-
-                        switch (TileMap[x, y].Type)
-                        {
-                            case Listof_Structures.Residential_1:
-                                district.Population[0] += 6;
-                                break;
-                            case Listof_Structures.Residential_2:
-                                district.Population[0] += 6;
-                                break;
-                            case Listof_Structures.Residential_3:
-                                district.Population[0] += 6;
-                                break;
-                            case Listof_Structures.Residential_4:
-                                district.Population[0] += 6;
-                                break;
-                            case Listof_Structures.Residential_5:
-                                district.Population[0] += 6;
-                                break;
-                        }
-
+                        //Temp setup
+                        City_Tyle T = TileMap[x, y];
+                        
+                        if (_e.Dictionaryof_BuildItems[T.Type].BuildingType == Listof_BuildTypes.Road)                                                    
+                            Traff.AddToBoth(T.Traffic);
                     }
+
+                int Workers = 0, Jobs = 0, Products = 0, Commerce = 0;
+                double JobMarket = 0;
+
+                Workers = Traff.OriginJobs_Transfer;
+                Jobs = Traff.DestJobs_Transfer;
+                if (Jobs > 0)
+                    JobMarket = (double)Workers / Jobs;
+                else
+                    JobMarket = 0;
+                if (JobMarket > 1) JobMarket = 1;
+
+                Products = Convert.ToInt32(Math.Floor(Traff.OriginProducts_Transfer * JobMarket));
+
+                if (Traff.DestProducts_Transfer  > 0)
+                {
+                    int Capacity = Convert.ToInt32(Math.Floor(Traff.DestProducts_Transfer * JobMarket));
+
+                    if (Capacity >= Products)
+                    {                    
+                        Commerce = Products;
+                        Products = 0;
+                    }
+                    else
+                    {
+                        Commerce = Capacity;
+                        Products -= Capacity;
+                    }
+                }                    
+                else
+                    Commerce = 0;
+
+                district.Workers = Workers;
+                district.Jobs[0] = Jobs;
+                district.JobMarket = JobMarket;
+                district.Products = Products;
+                district.Commerce[0] = Commerce;
+
             }
         }
 
@@ -478,7 +505,7 @@ namespace Colnaught
 
             for (int x = 0; x < CityArea.Width; x++)
                 for (int y = 0; y < CityArea.Height; y++)
-                {                    
+                {
                     if (TileMap[x, y].Type == Listof_Structures.RoadDirt)
                     {
                         rect = new Rectangle(x, y, 1, 1);
@@ -490,7 +517,7 @@ namespace Colnaught
                                 if (CityArea.Contains(new Point(x2, y2)))
                                     TileMap[x2, y2].LandValue = 1;
                             }
-                    }                   
+                    }
                 }
 
             for (int x = 0; x < CityArea.Width; x++)
@@ -501,7 +528,7 @@ namespace Colnaught
 
                     switch (TileMap[x, y].Type)
                     {
-                        case Listof_Structures.Residential_1:                            
+                        case Listof_Structures.Residential_1:
                             rect.Inflate(1, 1);
                             ValueAdd = 1;
                             break;
@@ -533,7 +560,7 @@ namespace Colnaught
                             }
                     }
                 }
-                        
+
             foreach (var district in districts)
             {
                 for (int x = 0; x < 256; x++)
