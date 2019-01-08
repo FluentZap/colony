@@ -172,8 +172,12 @@ namespace Colnaught
 
                 spriteBatch.DrawString(basicfont, "Type: " + _city.TileMap[sel_pos.X, sel_pos.Y].Type.ToString(), new Vector2(0, 60), Color.White);
 
-                spriteBatch.DrawString(basicfont, "ZoneID: " + _city.TileMap[sel_pos.X, sel_pos.Y].ZoneID.ToString(), new Vector2(0, 80), Color.White);
+                spriteBatch.DrawString(basicfont, "Connections: " + _city.TileMap[sel_pos.X, sel_pos.Y].ConnectedZones.ToString(), new Vector2(0, 80), Color.White);
+
+                spriteBatch.DrawString(basicfont, "Tile: X=" + sel_pos.X.ToString()
+                                                 + " Y=" + sel_pos.Y.ToString(), new Vector2(0, 100), Color.White);
                 
+
             }
             
 

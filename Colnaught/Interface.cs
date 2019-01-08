@@ -10,7 +10,7 @@ namespace Colnaught
 {
 
     enum Listof_ViewInterfaceButtons
-    {        
+    {
         BuildPanel,
         BuildButton1,
         BuildButton2,
@@ -54,14 +54,14 @@ namespace Colnaught
         {
             int w = Screen_Size.X;
             int h = Screen_Size.Y;
-            Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildPanel, new Interface_Item() { Location = new Rectangle(0, h - 200, w, 200)});
+            Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildPanel, new Interface_Item() { Location = new Rectangle(0, h - 200, w, 200) });
 
             Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildButton1, new Interface_Item() { Location = new Rectangle(256 + 128 * 0, h - 200, 128, 128), Type = Listof_ButtonType.Button });
             Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildButton2, new Interface_Item() { Location = new Rectangle(256 + 128 * 1, h - 200, 128, 128), Type = Listof_ButtonType.Button });
             Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildButton3, new Interface_Item() { Location = new Rectangle(256 + 128 * 2, h - 200, 128, 128), Type = Listof_ButtonType.Button });
             Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildButton4, new Interface_Item() { Location = new Rectangle(256 + 128 * 3, h - 200, 128, 128), Type = Listof_ButtonType.Button });
             Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildButton5, new Interface_Item() { Location = new Rectangle(256 + 128 * 4, h - 200, 128, 128), Type = Listof_ButtonType.Button });
-        }               
+        }
 
 
 
@@ -188,7 +188,7 @@ namespace Colnaught
                     }
                 }
 
-                //Build
+                //Build city center
                 if (!onPanel && Mouse.GetState().LeftButton == ButtonState.Pressed) MouseLeftClicked = true;
 
                 Rectangle area = new Rectangle(sel_pos.X, sel_pos.Y, 1, 1);
@@ -219,14 +219,14 @@ namespace Colnaught
                 if (Mouse.GetState().RightButton == ButtonState.Pressed) MouseRightClicked = true;
 
                 //Cancel Selection
-                if (MouseRightClicked && Mouse.GetState().RightButton == ButtonState.Released)                
+                if (MouseRightClicked && Mouse.GetState().RightButton == ButtonState.Released)
                     if (Math.Abs(MouseDragScreenScrollStart.X - Screen_Scroll.X) < 4 && Math.Abs(MouseDragScreenScrollStart.Y - Screen_Scroll.Y) < 4)
                     {
                         MouseRightClicked = false;
                         MouseLeftClicked = false;
                         MouseMode = Listof_MouseMode.Default;
                     }
-                
+
                 //Left Button has been Clicked
                 if (!onPanel && MouseLeftClicked == false && Mouse.GetState().LeftButton == ButtonState.Pressed)
                 {
@@ -271,21 +271,33 @@ namespace Colnaught
                 {
                     if (InsideDistrict(BuildRect))
                     {
-                        Rectangle CheckRect = BuildRect;
-                        CheckRect.Inflate(1, 1);
-                        for (int x = CheckRect.Left; x < CheckRect.Right; x++)
-                            for (int y = CheckRect.Top; y < CheckRect.Bottom; y++)
-                                if (_e.Dictionaryof_BuildItems[_city.TileMap[x, y].Type].ZoneType == _e.Dictionaryof_BuildItems[Building].ZoneType && _city.TileMap[x, y].ZoneID > 0)
-                                {
-                                    
-                                }
-
 
                         for (int x = BuildRect.Left; x < BuildRect.Right; x++)
                             for (int y = BuildRect.Top; y < BuildRect.Bottom; y++)
                             {
-                                if (_city.CityArea.Contains(new Point(x, y)))
+                                if (_city.CityArea.Contains(new Point(x, y)) && _city.TileMap[x, y].Buildable)
                                 {
+                                    City_Tyle tile = _city.TileMap[x, y];
+                                    _city.TileMap[x, y].ClearConnections();
+
+
+                                    //Check and add connections
+                                    for (int x2 = x + 1; x2 <= x + 4; x2++) //x>
+                                        if (_e.Dictionaryof_BuildItems[_city.TileMap[x2, y].Type].BuildingType == Listof_BuildTypes.Road)
+                                        { _city.TileMap[x2, y].AddConnection(tile); tile.ConnectedZones++; break; }
+
+                                    for (int x2 = x - 1; x2 >= x - 4; x2--) //x<
+                                        if (_e.Dictionaryof_BuildItems[_city.TileMap[x2, y].Type].BuildingType == Listof_BuildTypes.Road)
+                                        { _city.TileMap[x2, y].AddConnection(tile); tile.ConnectedZones++; break; }
+
+                                    for (int y2 = y + 1; y2 <= y + 4; y2++) //y>
+                                        if (_e.Dictionaryof_BuildItems[_city.TileMap[x, y2].Type].BuildingType == Listof_BuildTypes.Road)
+                                        { _city.TileMap[x, y2].AddConnection(tile); tile.ConnectedZones++; break; }
+
+                                    for (int y2 = y - 1; y2 >= y - 4; y2--) //y<
+                                        if (_e.Dictionaryof_BuildItems[_city.TileMap[x, y2].Type].BuildingType == Listof_BuildTypes.Road)
+                                        { _city.TileMap[x, y2].AddConnection(tile); tile.ConnectedZones++; break; }
+
                                     _city.TileMap[x, y].Type = Building;
                                 }
                             }
@@ -301,7 +313,7 @@ namespace Colnaught
                         MouseLeftClicked = false;
                         BuildRect = Rectangle.Empty;
                     }
-                        
+
                 }
             }
 
@@ -376,33 +388,63 @@ namespace Colnaught
                 }
 
 
-
+                //Build roads
                 if (MouseLeftClicked && Mouse.GetState().LeftButton == ButtonState.Released)
                 {
                     if (InsideDistrict(BuildRect))
                     {
                         for (int x = BuildRect.Left; x < BuildRect.Right; x++)
-                            for (int y = BuildRect.Top; y < BuildRect.Bottom; y++)
-                            {
+                            for (int y = BuildRect.Top; y < BuildRect.Bottom; y++)                            
                                 if (_city.CityArea.Contains(new Point(x, y)))
                                 {
                                     _city.TileMap[x, y].Type = Building;
                                     _city.TileMap[x, y].SpriteIndex = 0;
-                                }
-                            }
+                                    _city.TileMap[x, y].Buildable = false;
+                                    _city.TileMap[x, y].ClearConnections();
 
-                        BuildRect.Inflate(4, 4);
+                                    //set buildable area
+                                    for (int x2 = x - 4; x2 <= x + 4; x2 += 1)
+                                        if (_city.TileMap[x2, y].Type == Listof_Structures.Grass)
+                                            _city.TileMap[x2, y].Buildable = true;
+
+                                    for (int y2 = y - 4; y2 <= y + 4; y2 += 1)
+                                        if (_city.TileMap[x, y2].Type == Listof_Structures.Grass)
+                                            _city.TileMap[x, y2].Buildable = true;
+                                }                            
+
+
                         for (int x = BuildRect.Left; x < BuildRect.Right; x++)
-                            for (int y = BuildRect.Top; y < BuildRect.Bottom; y++)
-                            {
+                            for (int y = BuildRect.Top; y < BuildRect.Bottom; y++)                            
                                 if (_city.CityArea.Contains(new Point(x, y)))
                                 {
-                                    if (_city.TileMap[x, y].Type == Listof_Structures.Grass)
-                                        _city.TileMap[x, y].Buildable = true;
-                                    else
-                                        _city.TileMap[x, y].Buildable = false;
-                                }
-                            }
+                                    //Add zones to roads
+                                    for (int x2 = x + 1; x2 <= x + 4; x2++) //x>
+                                        if (_e.Dictionaryof_BuildItems[_city.TileMap[x2, y].Type].BuildingType == Listof_BuildTypes.Structure ||
+                                            _e.Dictionaryof_BuildItems[_city.TileMap[x2, y].Type].BuildingType == Listof_BuildTypes.Zone)
+                                        { _city.TileMap[x, y].AddConnection(_city.TileMap[x2, y]); _city.TileMap[x2, y].ConnectedZones++; }
+                                        else if (_e.Dictionaryof_BuildItems[_city.TileMap[x2, y].Type].BuildingType == Listof_BuildTypes.Road) break;
+
+                                    for (int x2 = x - 1; x2 >= x - 4; x2--) //x<
+                                        if (_e.Dictionaryof_BuildItems[_city.TileMap[x2, y].Type].BuildingType == Listof_BuildTypes.Structure ||
+                                            _e.Dictionaryof_BuildItems[_city.TileMap[x2, y].Type].BuildingType == Listof_BuildTypes.Zone)
+                                        { _city.TileMap[x, y].AddConnection(_city.TileMap[x2, y]); _city.TileMap[x2, y].ConnectedZones++; }
+                                        else if (_e.Dictionaryof_BuildItems[_city.TileMap[x2, y].Type].BuildingType == Listof_BuildTypes.Road) break;
+
+                                    for (int y2 = y + 1; y2 <= y + 4; y2++) //y>
+                                        if (_e.Dictionaryof_BuildItems[_city.TileMap[x, y2].Type].BuildingType == Listof_BuildTypes.Structure ||
+                                            _e.Dictionaryof_BuildItems[_city.TileMap[x, y2].Type].BuildingType == Listof_BuildTypes.Zone)
+                                        { _city.TileMap[x, y].AddConnection(_city.TileMap[x, y2]); _city.TileMap[x, y2].ConnectedZones++; }
+                                        else if (_e.Dictionaryof_BuildItems[_city.TileMap[x, y2].Type].BuildingType == Listof_BuildTypes.Road) break;
+
+                                    for (int y2 = y - 1; y2 >= y - 4; y2--) //y<
+                                        if (_e.Dictionaryof_BuildItems[_city.TileMap[x, y2].Type].BuildingType == Listof_BuildTypes.Structure ||
+                                            _e.Dictionaryof_BuildItems[_city.TileMap[x, y2].Type].BuildingType == Listof_BuildTypes.Zone)
+                                        { _city.TileMap[x, y].AddConnection(_city.TileMap[x, y2]); _city.TileMap[x, y2].ConnectedZones++; }
+                                        else if (_e.Dictionaryof_BuildItems[_city.TileMap[x, y2].Type].BuildingType == Listof_BuildTypes.Road) break;
+                                }                            
+
+
+
                         MouseLeftClicked = false;
                         if (Keyboard.GetState().IsKeyUp(Keys.LeftShift) && Keyboard.GetState().IsKeyUp(Keys.RightShift))
                             MouseMode = Listof_MouseMode.Default;
@@ -414,12 +456,12 @@ namespace Colnaught
                         MouseLeftClicked = false;
                         BuildRect = Rectangle.Empty;
                     }
-                        
+
                 }
             }
 
 
-            
+
         }
 
 
