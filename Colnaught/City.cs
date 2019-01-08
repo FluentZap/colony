@@ -78,15 +78,15 @@ namespace Colnaught
         public int DestProducts_Transfer = 0;        
 
 
-        public void AddToTransfer(Tile_Traffic Source)
+        public void AddToTransfer(Tile_Traffic Source, int Split)
         {
-            OriginJobs_Transfer += Source.OriginJobs;
-            OriginCommerce_Transfer += Source.OriginCommerce;
-            OriginProducts_Transfer += Source.OriginProducts;
+            OriginJobs_Transfer += Source.OriginJobs / Split;
+            OriginCommerce_Transfer += Source.OriginCommerce / Split;
+            OriginProducts_Transfer += Source.OriginProducts / Split;
 
-            DestJobs_Transfer += Source.DestJobs;
-            DestCommerce_Transfer += Source.DestCommerce;
-            DestProducts_Transfer += Source.DestProducts;
+            DestJobs_Transfer += Source.DestJobs / Split;
+            DestCommerce_Transfer += Source.DestCommerce / Split;
+            DestProducts_Transfer += Source.DestProducts / Split;
         }
 
 
@@ -137,14 +137,55 @@ namespace Colnaught
         public int LandValue;
         public bool Buildable = false;
         public Tile_Traffic Traffic = new Tile_Traffic();
-        public int ZoneID = 0;        
+        public int ConnectedZones = 0; //ConnectedRoads when it's a Zone        
+        public City_Tyle[] RoadContacts = new City_Tyle[16];
 
-        public bool Connected = true;
+        //public bool Connected = true;
 
         public City_Tyle()
         {
 
         }
+
+
+
+
+        public void TrafficByConnection()
+        {
+            Traffic.Clear();
+            
+            foreach (var item in RoadContacts)
+                if (item != null)                    
+                    Traffic.AddToTransfer(item.Traffic, item.ConnectedZones);
+        }
+
+
+        public void ClearConnections()
+        {
+            RoadContacts = new City_Tyle[16];
+            ConnectedZones = 0;
+        }
+
+        public void AddConnection(City_Tyle Connection)
+        {
+            if (ConnectedZones < 16)
+            {
+                bool AlreadyAdded = false;
+                foreach (var item in RoadContacts)                
+                    if (item == Connection) AlreadyAdded = true;
+                
+                if (!AlreadyAdded)
+                {
+                    RoadContacts[ConnectedZones] = Connection;
+                    ConnectedZones++;
+                }                
+            }            
+        }
+
+
+
+
+
 
     }
 
