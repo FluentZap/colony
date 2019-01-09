@@ -182,6 +182,97 @@ Adds as Output/Input
 Set's the Traffic to what the last was 
 
 
-Set Zones as Connected
-Crawl out from connected zones with the least amount of jumps.
-Cycle until all tiles are added.
+
+
+
+
+
+
+
+Just get it working and not do traffic yet.
+
+Just take max jobs in city.
+
+
+STEPS
+
+
+Make cool Robot upgrade/modify system.
+
+Goods Production window.
+
+Science Window.
+
+District Transit.
+
+
+
+
+
+
+
+Jobs / Job Demand Gives 	Production %
+
+Production * Products = Products
+
+
+
+Basic People Satisfaction is Commerce supply to the population and services level.
+
+
+Services that people like
+
+Basic Buildings that provide services.
+
+
+Primary School 		Brings no education numbers to low
+Secondary School	Brings low education numbers to medium
+University			Brings medium education numbers to high
+
+
+
+Parks
+	Increases beautification that makes people in it's range use less Commerce.
+	Increases Land Value
+Education			3 separate levels
+	Primary School
+	Secondary School
+	University
+Water/Sewage		Runs on the road, needs a connection to run.
+	Primary need for population. They will leave if there is no water.	
+Waste Management
+	Garbage will pile up unless collected by a garbage center.
+	Commerce turns into it after it is used and it's a byproduct from making Products.	
+Fire
+	Fire risk will burn down zones buildings, Prevents fire danger.
+Police
+	Police will cause a slowdown to Products, Commerce, Move in rates.
+Telecommunications
+	Increases education levels.
+	Possible Could boost everything
+Public Transportation
+	
+Health Care
+	(Simulates Longer Lives)
+	Increases Move in rates.
+	Decrease education falloff.	
+
+
+
+Buildings have a fixed cost, 
+
+
+	
+	
+Public Buildings
+	Governors Mansion		Allow a Governor to be Hired.
+Courts
+	Increases tax rates
+	
+
+
+R	If there are jobs there is R demand. Multiplied by People Satisfaction.
+
+C
+
+I
