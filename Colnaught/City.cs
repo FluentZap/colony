@@ -137,8 +137,48 @@ namespace Colnaught
         public int LandValue;
         public bool Buildable = false;
         public Tile_Traffic Traffic = new Tile_Traffic();
-        public int ConnectedZones = 0; //ConnectedRoads when it's a Zone        
+        
+
         public City_Tyle[] RoadContacts = new City_Tyle[16];
+        public int ConnectedItems = 0;
+
+
+        void AddRoadConnection(City_Tyle tile)
+        {
+            bool AlreadyAdded = false;
+
+            foreach (var item in RoadContacts)
+                if (item == tile) AlreadyAdded = true;
+
+            if (ConnectedItems < 16 && !AlreadyAdded)
+                for (int n = 0; n <= 15; n++)
+                    if (RoadContacts[n] == null)
+                    {
+                        RoadContacts[n] = tile;
+                        ConnectedItems++;
+                        break;
+                    }
+        }
+
+        void RemoveRoadConnection(City_Tyle tile)
+        {
+            for (int n = 0; n <= 15; n++)
+                if (RoadContacts[n] != null)
+                    if (RoadContacts[n] == tile)
+                    {
+                        RoadContacts[n] = null;
+                        ConnectedItems--;
+                    }
+        }
+
+        void ClearRoadConnection()
+        {
+            City_Tyle[] RoadContacts = new City_Tyle[16];
+            ConnectedItems = 0;
+        }
+
+        //public int ConnectedZones = 0; //ConnectedRoads when it's a Zone        
+        //public City_Tyle[] RoadContacts = new City_Tyle[16];
 
         //public bool Connected = true;
 
@@ -149,6 +189,34 @@ namespace Colnaught
 
 
 
+        public void ConnectTile(City_Tyle tile)
+        {
+            //Add tile to our list
+            AddRoadConnection(tile);
+            //Add us to there list
+            tile.AddRoadConnection(this);
+        }
+
+        public void RemoveTile(City_Tyle tile)
+        {
+            //Remove us from there list
+            tile.RemoveRoadConnection(this);
+            //Remove them from our list
+            RemoveRoadConnection(tile);
+        }
+
+
+        public void ClearConnections()
+        {
+            for (int n = 0; n <= 15; n++)
+                if (RoadContacts[n] != null)
+                {
+                    RoadContacts[n].RemoveRoadConnection(this);
+                    RemoveRoadConnection(RoadContacts[n]);
+                }    
+        }
+
+
 
         public void TrafficByConnection()
         {
@@ -156,35 +224,20 @@ namespace Colnaught
 
             foreach (var item in RoadContacts)
                 if (item != null)
-                    Traffic.AddToTransfer(item.Traffic, item.ConnectedZones);
-        }
-
-
-        public void ClearConnections()
-        {
-            RoadContacts = new City_Tyle[16];
-            ConnectedZones = 0;
-        }
-
-        public void AddConnection(City_Tyle Connection)
-        {
-            if (ConnectedZones < 16)
-            {
-                bool AlreadyAdded = false;
-                foreach (var item in RoadContacts)
-                    if (item == Connection) AlreadyAdded = true;
-
-                if (!AlreadyAdded)
-                {
-                    RoadContacts[ConnectedZones] = Connection;
-                    ConnectedZones++;
-                }
-            }
-        }
+                    Traffic.AddToTransfer(item.Traffic, item.ConnectedItems);
+        }               
 
 
 
+            //Might not need the overhead yet
+            //Connection.AddConnectedRoad(this);        
 
+
+     
+
+
+
+        
 
 
     }
@@ -297,6 +350,13 @@ namespace Colnaught
 
         }
 
+
+        public District GetDistrictByPoint(Point P)
+        {
+            foreach (var district in districts)            
+                if (district.Area.Contains(P)) return district;            
+            return null;
+        }
 
 
 
