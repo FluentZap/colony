@@ -63,8 +63,11 @@ namespace Colnaught
 
         Listof_Structures Building;
 
-        Point BuildRectPoint;
+        Point BuildPoint1 = new Point(-1, -1);
+        Point BuildPoint2 = new Point(-1, -1);
         Rectangle BuildRect;
+        bool Buildable;
+
 
         Point Screen_Scroll;
         public Point Screen_Size;
@@ -72,6 +75,11 @@ namespace Colnaught
         Interface _interface;
         City _city;
         Encyclopedia _e;
+
+
+        long Currency = 10000;
+
+
 
 
         int count;

@@ -20,8 +20,8 @@ namespace Colnaught
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            bool DrawMapTile;
-            Color MapTileColor;
+            bool DrawMapTile = true;
+            Color MapTileColor = Color.White;
             Vector2 pos;
             Point sel_pos;
             Vector2 Tile_Size = new Vector2(zoom, zoom);
@@ -43,6 +43,8 @@ namespace Colnaught
 
             sel_pos.X = (int)Math.Floor((mPos.Y - 128) / 64 + (mPos.X - 128) / 128);
             sel_pos.Y = (int)Math.Floor((-mPos.X - 128) / 128 + (mPos.Y - 128) / 64);
+
+
 
             for (int y = 0; y < _city.CityArea.Height; y++)
                 for (int x = 0; x < _city.CityArea.Width; x++)
@@ -66,33 +68,91 @@ namespace Colnaught
                         DrawMapTile = true;
                         MapTileColor = Color.White;
 
+
+                        //////////////Building Calculation///////////////
+
                         if (MouseMode == Listof_MouseMode.Building)
                         {
 
                             foreach (var district in _city.districts)
                                 if (district.Area.Contains(sel_pos)) distrect = district.Area;
 
+                            //Structures
                             if (_e.Dictionaryof_BuildItems[Building].BuildingType == Listof_BuildTypes.Structure)
                             {
                                 if (x == sel_pos.X && y == sel_pos.Y)
                                     spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.CornflowerBlue, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
                             }
 
-                            if (_e.Dictionaryof_BuildItems[Building].BuildingType == Listof_BuildTypes.Zone || _e.Dictionaryof_BuildItems[Building].BuildingType == Listof_BuildTypes.Road)
+                            //Zones
+                            if (_e.Dictionaryof_BuildItems[Building].BuildingType == Listof_BuildTypes.Zone)
                             {
                                 if (x == sel_pos.X && y == sel_pos.Y)
                                 {
-                                    spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.CornflowerBlue, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
+                                    if (_city.TileMap[x, y].Buildable)                                    
+                                        spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.White, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);                                                                            
+                                    else                                    
+                                        spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.CornflowerBlue, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);                                                                            
                                     DrawMapTile = false;
+
                                 }
+
                                 if (BuildRect.Contains(new Point(x, y)))
                                 {
-                                    spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.CornflowerBlue, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
-                                    DrawMapTile = false;
+                                    if (!_city.TileMap[x, y].Buildable && _e.Dictionaryof_BuildItems[_city.TileMap[x, y].Type].BuildingType == Listof_BuildTypes.Empty)
+                                    {
+                                        spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.CornflowerBlue, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
+                                        DrawMapTile = false;
+                                    }
+
+
+                                    if (_city.TileMap[x, y].Buildable)
+                                    {
+                                        spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.White, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
+                                        DrawMapTile = false;
+                                    }
                                 }
                             }
 
 
+                            //Roads
+                            if (_e.Dictionaryof_BuildItems[Building].BuildingType == Listof_BuildTypes.Road)
+                            {
+
+                                Point P1, P2, P3;
+                                //Set building points X and Y
+                                if (BuildPoint1.X <= BuildPoint2.X)
+                                { P1.X = BuildPoint1.X; P2.X = BuildPoint2.X; }
+                                else
+                                { P1.X = BuildPoint2.X; P2.X = BuildPoint1.X; }
+
+                                if (BuildPoint1.Y <= BuildPoint2.Y)
+                                { P1.Y = BuildPoint1.Y; P2.Y = BuildPoint2.Y; }
+                                else
+                                { P1.Y = BuildPoint2.Y; P2.Y = BuildPoint1.Y; }
+
+
+                                //Set Shortest Angle
+                                int ShortX = Math.Abs(BuildPoint1.X - BuildPoint2.X), ShortY = Math.Abs(BuildPoint1.Y - BuildPoint2.Y), Temp;
+
+                                if (Keyboard.GetState().IsKeyUp(Keys.LeftControl))
+                                { Temp = ShortX; ShortX = ShortY; ShortY = Temp; }
+
+                                if (ShortY >= ShortX)
+                                { P3.X = BuildPoint2.X; P3.Y = BuildPoint1.Y; }
+                                else
+                                { P3.X = BuildPoint1.X; P3.Y = BuildPoint2.Y; }
+
+                                if (y == P3.Y && x >= P1.X && x <= P2.X)
+                                { spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), (Buildable == true ? Color.CornflowerBlue : Color.LightSalmon), 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1); DrawMapTile = false; }
+
+                                if (x == P3.X && y >= P1.Y && y <= P2.Y)
+                                { spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), (Buildable == true ? Color.CornflowerBlue : Color.LightSalmon), 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1); DrawMapTile = false; }
+
+                            }
+
+
+                            //CityCenter
                             if (_e.Dictionaryof_BuildItems[Building].BuildingType == Listof_BuildTypes.CityCenter)
                             {
                                 Rectangle dist = new Rectangle(sel_pos.X, sel_pos.Y, 1, 1);
@@ -108,6 +168,7 @@ namespace Colnaught
                             }
 
 
+                            //Hilight Districts
                             if (_city.districts.Count == 0)
                                 if (_e.Dictionaryof_BuildItems[Building].BuildingType != Listof_BuildTypes.CityCenter)
                                     MapTileColor = Color.LightSalmon;
@@ -132,7 +193,7 @@ namespace Colnaught
                                 else
                                 {
                                     if (district.Area.Contains(new Point(x, y)))
-                                        MapTileColor = Color.LightSalmon;
+                                        MapTileColor = Color.CornflowerBlue;
                                 }
                             }
 
@@ -141,18 +202,19 @@ namespace Colnaught
                         if (DrawMapTile)
                             spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[_city.TileMap[x, y].Type].Texture], pos, new Rectangle(0 + 128 * _city.TileMap[x, y].SpriteIndex, 0, 128, 256), MapTileColor, 0, new Vector2(), Tile_Size, SpriteEffects.None, 1);
 
-
                     }
-
-                    //if (x == sel_pos.X && y == sel_pos.Y)
-                    //spriteBatch.Draw(TileTexture[(int)Listof_Texture.Grass], pos, null, Color.White, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
                 }
+
+            //if (x == sel_pos.X && y == sel_pos.Y)
+            //spriteBatch.Draw(TileTexture[(int)Listof_Texture.Grass], pos, null, Color.White, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);        
 
 
             DrawInterface(sel_pos);
             spriteBatch.End();
             base.Draw(gameTime);
+
         }
+
 
 
 
@@ -164,6 +226,15 @@ namespace Colnaught
                 if (item.Value.Type == Listof_ButtonType.Button) spriteBatch.Draw(TileTexture[(int)Listof_Texture.Button1], item.Value.Location, item.Value.color);
             }
 
+
+
+
+            spriteBatch.DrawString(basicfont, "$" + Currency.ToString(), new Vector2(Screen_Size.X - 300, Screen_Size.Y - 200), Color.White);
+
+
+
+
+            //DEBUG
             if (_city.CityArea.Contains(sel_pos))
             {
                 spriteBatch.DrawString(basicfont, "Transfer Jobs: " + _city.TileMap[sel_pos.X, sel_pos.Y].Traffic.OriginJobs_Transfer.ToString(), new Vector2(0, 0), Color.White);
@@ -172,11 +243,11 @@ namespace Colnaught
 
                 spriteBatch.DrawString(basicfont, "Type: " + _city.TileMap[sel_pos.X, sel_pos.Y].Type.ToString(), new Vector2(0, 60), Color.White);
 
-                spriteBatch.DrawString(basicfont, "Connections: " + _city.TileMap[sel_pos.X, sel_pos.Y].ConnectedZones.ToString(), new Vector2(0, 80), Color.White);
+                spriteBatch.DrawString(basicfont, "Connections: " + _city.TileMap[sel_pos.X, sel_pos.Y].ConnectedItems.ToString(), new Vector2(0, 80), Color.White);
 
                 spriteBatch.DrawString(basicfont, "Tile: X=" + sel_pos.X.ToString()
                                                  + " Y=" + sel_pos.Y.ToString(), new Vector2(0, 100), Color.White);
-                
+
 
             }
 
@@ -188,7 +259,7 @@ namespace Colnaught
                 spriteBatch.DrawString(basicfont, "Products: " + district.Products.ToString(), new Vector2(300, 60), Color.White);
                 spriteBatch.DrawString(basicfont, "Commerce: " + district.Commerce[0].ToString(), new Vector2(300, 80), Color.White);
 
-            }                                   
+            }
 
         }
 
