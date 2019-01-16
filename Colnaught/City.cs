@@ -213,7 +213,7 @@ namespace Colnaught
                 {
                     RoadContacts[n].RemoveRoadConnection(this);
                     RemoveRoadConnection(RoadContacts[n]);
-                }    
+                }
         }
 
 

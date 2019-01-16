@@ -55,7 +55,9 @@ namespace Colnaught
                     rec.Inflate(20, 20);
 
                     Rectangle ScreenRect = new Rectangle(0, 0, Screen_Size.X, Screen_Size.Y);
-                    ScreenRect.Inflate(256, 128);
+                    ScreenRect.Y -= Convert.ToInt32(256 * zoom);
+                    ScreenRect.X -= Convert.ToInt32(128 * zoom);
+                    ScreenRect.Inflate(256 * zoom, 128 * zoom);
                     //if (rec.Contains(new Point(x, y)))
                     //{                        
                     //}
@@ -231,6 +233,9 @@ namespace Colnaught
 
             spriteBatch.DrawString(basicfont, "$" + Currency.ToString(), new Vector2(Screen_Size.X - 300, Screen_Size.Y - 200), Color.White);
 
+            if (BuildCost > 0)
+                spriteBatch.DrawString(basicfont, "-$" + BuildCost.ToString(), Mouse.GetState().Position.ToVector2() + new Vector2(20, -20), Color.White);
+            //spriteBatch.DrawString(basicfont, "-$" + BuildCost.ToString(), new Vector2(Screen_Size.X - 300, Screen_Size.Y - 180), Color.White);
 
 
 
@@ -241,14 +246,12 @@ namespace Colnaught
                 spriteBatch.DrawString(basicfont, "Jobs: " + _city.TileMap[sel_pos.X, sel_pos.Y].Traffic.OriginJobs.ToString(), new Vector2(0, 20), Color.White);
                 spriteBatch.DrawString(basicfont, "Tier: " + _city.TileMap[sel_pos.X, sel_pos.Y].Traffic.tier.ToString(), new Vector2(0, 40), Color.White);
 
-                spriteBatch.DrawString(basicfont, "Type: " + _city.TileMap[sel_pos.X, sel_pos.Y].Type.ToString(), new Vector2(0, 60), Color.White);
+                spriteBatch.DrawString(basicfont, "Type: " + _e.Dictionaryof_BuildItems[_city.TileMap[sel_pos.X, sel_pos.Y].Type].BuildingType.ToString(), new Vector2(0, 60), Color.White);
 
                 spriteBatch.DrawString(basicfont, "Connections: " + _city.TileMap[sel_pos.X, sel_pos.Y].ConnectedItems.ToString(), new Vector2(0, 80), Color.White);
 
                 spriteBatch.DrawString(basicfont, "Tile: X=" + sel_pos.X.ToString()
                                                  + " Y=" + sel_pos.Y.ToString(), new Vector2(0, 100), Color.White);
-
-
             }
 
             foreach (var district in _city.districts)
