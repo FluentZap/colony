@@ -359,6 +359,17 @@ namespace Colnaught
         }
 
 
+        public int Calculate_Taxes()
+        {
+            int Taxes = 0;
+            foreach (var district in districts)
+            {
+                Taxes += Convert.ToInt32(district.Workers * 0.0025f);
+            }
+
+            return Taxes;
+        }
+
 
 
         public void Calculate_JPC()

@@ -107,35 +107,35 @@ namespace Colnaught
                         {
                             ClearBuild();
                             MouseMode = Listof_MouseMode.Building;
-                            Building = Listof_Structures.CityCenter;                            
+                            Building = Listof_Structures.CityCenter;
                         }
 
                         if (item.Key == Listof_ViewInterfaceButtons.BuildButton2)
                         {
                             ClearBuild();
-                            MouseMode = Listof_MouseMode.Building;                            
-                            Building = Listof_Structures.ZoneResidential;                            
+                            MouseMode = Listof_MouseMode.Building;
+                            Building = Listof_Structures.ZoneResidential;
                         }
 
                         if (item.Key == Listof_ViewInterfaceButtons.BuildButton3)
                         {
                             ClearBuild();
-                            MouseMode = Listof_MouseMode.Building;                            
-                            Building = Listof_Structures.ZoneCommercial;                            
+                            MouseMode = Listof_MouseMode.Building;
+                            Building = Listof_Structures.ZoneCommercial;
                         }
 
                         if (item.Key == Listof_ViewInterfaceButtons.BuildButton4)
                         {
                             ClearBuild();
-                            MouseMode = Listof_MouseMode.Building;                            
-                            Building = Listof_Structures.ZoneIndustrial;                            
+                            MouseMode = Listof_MouseMode.Building;
+                            Building = Listof_Structures.ZoneIndustrial;
                         }
 
                         if (item.Key == Listof_ViewInterfaceButtons.BuildButton5)
                         {
                             ClearBuild();
-                            MouseMode = Listof_MouseMode.Building;                            
-                            Building = Listof_Structures.RoadDirt;                            
+                            MouseMode = Listof_MouseMode.Building;
+                            Building = Listof_Structures.RoadDirt;
                         }
                     }
 
@@ -169,11 +169,7 @@ namespace Colnaught
                     if (Math.Abs(MouseDragScreenScrollStart.X - Screen_Scroll.X) < 4 && Math.Abs(MouseDragScreenScrollStart.Y - Screen_Scroll.Y) < 4)
                     {
                         MouseRightClicked = false;
-                        MouseLeftClicked = false;
-                        MouseMode = Listof_MouseMode.Default;
-                        BuildPoint1 = new Point(-1, -1);
-                        BuildPoint2 = new Point(-1, -1);
-                        BuildRect = new Rectangle(0, 0, 0, 0);
+                        ClearBuild();
                     }
 
                 if (!onPanel)
@@ -188,7 +184,6 @@ namespace Colnaught
                 }
                 else
                     MouseLeftClicked = false;
-
 
 
 
@@ -210,7 +205,7 @@ namespace Colnaught
                     BuildPoint1 = sel_pos;
 
                     if (Build == true)
-                        if (Buildable)                       
+                        if (Buildable)
                         {
                             Rectangle DistrictArea = new Rectangle(sel_pos, new Point(1, 1));
                             DistrictArea.Inflate(20, 20);
@@ -523,7 +518,7 @@ namespace Colnaught
                 else
                 { P1.Y = BuildPoint2.Y; P2.Y = BuildPoint1.Y; }
 
-                Rectangle buildzone = new Rectangle(P1.X, P1.Y, (P2.X - P1.X) + 1, (P2.Y - P1.Y) + 1);                
+                Rectangle buildzone = new Rectangle(P1.X, P1.Y, (P2.X - P1.X) + 1, (P2.Y - P1.Y) + 1);
 
                 District district1 = _city.GetDistrictByPoint(P1);
                 District district2 = _city.GetDistrictByPoint(P2);

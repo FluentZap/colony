@@ -206,6 +206,7 @@ namespace Colnaught
 
                 _city.Calculate_Traffic();
                 _city.Calculate_JPC();
+                Currency += _city.Calculate_Taxes();
                 count = 0;
             }
             count++;
