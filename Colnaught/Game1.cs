@@ -28,8 +28,7 @@ namespace Colnaught
     enum Listof_MouseMode
     {
         Default,
-        Building,
-        DragBuilding
+        Building        
     }
 
     
@@ -68,6 +67,7 @@ namespace Colnaught
         Rectangle BuildRect;
         bool Buildable;
 
+        int BuildCost = 0;
 
         Point Screen_Scroll;
         public Point Screen_Size;
@@ -200,7 +200,10 @@ namespace Colnaught
 
             if (count >= 10)
             {
-                _city.Calculate_Growth();
+                for (int x = 0; x < 10; x++)
+                    _city.Calculate_Growth();
+
+
                 _city.Calculate_Traffic();
                 _city.Calculate_JPC();
                 count = 0;
