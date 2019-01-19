@@ -4,3 +4,9 @@ Todo List
 Prevent Roads from Double connecting
 Add real traffic calculation
 
+Always 1
+Y >= X
+
+X-1
+
+

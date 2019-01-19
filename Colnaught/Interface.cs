@@ -366,13 +366,13 @@ namespace Colnaught
             _city.TileMap[P.X, P.Y].SpriteIndex = 0;
             _city.TileMap[P.X, P.Y].Buildable = false;
 
-
+            Rectangle BuildArea = new Rectangle(-4, -4, 8, 8);
             //set buildable area
-            for (int x = P.X - 4; x <= P.X + 4; x += 1)
+            for (int x = P.X + BuildArea.Left; x <= P.X + BuildArea.Right; x += 1)
                 if (_city.TileMap[x, P.Y].Type == Listof_Structures.Grass)
                     _city.TileMap[x, P.Y].Buildable = true;
 
-            for (int y = P.Y - 4; y <= P.Y + 4; y += 1)
+            for (int y = P.Y + BuildArea.Top; y <= P.Y + BuildArea.Bottom; y += 1)
                 if (_city.TileMap[P.X, y].Type == Listof_Structures.Grass)
                     _city.TileMap[P.X, y].Buildable = true;
         }
@@ -566,8 +566,58 @@ namespace Colnaught
 
 
 
-        void ReconnectTile(Point P)
+        void ConnectTile(Point P)
         {
+            //Check all tiles in range of 4            
+            if (_city.CityArea.Contains(P))
+            {
+                Listof_BuildTypes type = _e.Dictionaryof_BuildItems[_city.TileMap[P.X, P.Y].Type].BuildingType;
+
+                for (int x = P.X + 1; x <= P.X + 4; x++) //x>
+                    CheckTile(x, P.Y, P.X, P.Y, type);
+
+                for (int x = P.X - 1; x >= P.X - 4; x--) //x<
+                    CheckTile(x, P.Y, P.X, P.Y, type);
+
+                for (int y = P.Y + 1; y <= P.Y + 4; y++) //y>
+                    CheckTile(P.X, y, P.X, P.Y, type);
+
+                for (int y = P.Y - 1; y >= P.Y - 4; y--) //y<
+                    CheckTile(P.X, y, P.X, P.Y, type);
+            }
+
+
+            bool CheckTile(int x, int y, int Sx, int Sy, Listof_BuildTypes SType)
+            {
+                City_Tyle tile = _city.TileMap[Sx, Sy];
+
+                if (_city.CityArea.Contains(new Point(x, y)))
+                {
+
+                    if (SType == Listof_BuildTypes.Road)
+                    {
+                        if (_e.Dictionaryof_BuildItems[_city.TileMap[x, P.Y].Type].BuildingType == Listof_BuildTypes.Road)
+                        { _city.TileMap[x, P.Y].ConnectTile(tile); return true; }
+                    }
+
+
+                    if (SType == Listof_BuildTypes.Zone || SType == Listof_BuildTypes.Structure)
+                    {
+                        if (_e.Dictionaryof_BuildItems[_city.TileMap[x, y].Type].BuildingType == Listof_BuildTypes.Structure ||
+                        _e.Dictionaryof_BuildItems[_city.TileMap[x, y].Type].BuildingType == Listof_BuildTypes.Zone)
+                        tile.ConnectTile(_city.TileMap[x, y]);
+                        else 
+                        if (_e.Dictionaryof_BuildItems[_city.TileMap[x, y].Type].BuildingType == Listof_BuildTypes.Road)
+                            return false;
+                    }
+
+
+                }
+
+                return false;
+            }
+
+
             for (int x = P.X - 4; x <= P.X + 4; x += 1)
             {
                 _city.TileMap[x, P.Y].ClearConnections();
