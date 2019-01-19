@@ -358,6 +358,13 @@ namespace Colnaught
             return null;
         }
 
+        public void Calculate_RCI()
+        {
+
+
+
+        }
+
 
         public int Calculate_Taxes()
         {
@@ -369,7 +376,6 @@ namespace Colnaught
 
             return Taxes;
         }
-
 
 
         public void Calculate_JPC()
