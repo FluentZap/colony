@@ -266,7 +266,7 @@ namespace Colnaught
                                     if (_city.CityArea.Contains(new Point(x, y)) && _city.TileMap[x, y].Buildable)
                                     {
                                         //tile is the zone being created
-                                        _city.TileMap[x, y].ClearConnections();                                        
+                                        _city.TileMap[x, y].ClearConnections();
                                         _city.TileMap[x, y].Type = Building;
                                         ConnectTile(new Point(x, y));
                                     }
@@ -333,15 +333,6 @@ namespace Colnaught
                             for (int y = P1.Y; y <= P2.Y; y++)
                                 ReconnectTile(new Point(P3.X, y));
 
-
-                            /*
-                            //Check and connect all effected tiles
-                            for (int x = P1.X; x <= P2.X; x++)
-                                ReconnectTile(new Point(x, P3.Y));
-                            for (int y = P1.Y; y <= P2.Y; y++)
-                                ReconnectTile(new Point(P3.X, y));
-                            */
-
                             Currency -= BuildCost;
 
                             ClearBuild();
@@ -368,12 +359,14 @@ namespace Colnaught
             Rectangle BuildArea = new Rectangle(-4, -4, 8, 8);
             //set buildable area
             for (int x = P.X + BuildArea.Left; x <= P.X + BuildArea.Right; x += 1)
-                if (_city.TileMap[x, P.Y].Type == Listof_Structures.Grass)
-                    _city.TileMap[x, P.Y].Buildable = true;
+                if (_city.CityArea.Contains(new Point(x, P.Y)))
+                    if (_city.TileMap[x, P.Y].Type == Listof_Structures.Grass)
+                        _city.TileMap[x, P.Y].Buildable = true;
 
             for (int y = P.Y + BuildArea.Top; y <= P.Y + BuildArea.Bottom; y += 1)
-                if (_city.TileMap[P.X, y].Type == Listof_Structures.Grass)
-                    _city.TileMap[P.X, y].Buildable = true;
+                if (_city.CityArea.Contains(new Point(P.X, y)))
+                    if (_city.TileMap[P.X, y].Type == Listof_Structures.Grass)
+                        _city.TileMap[P.X, y].Buildable = true;
         }
 
         void ClearBuild()
@@ -490,6 +483,9 @@ namespace Colnaught
                 if (IntersectsDistrict(area))
                     Buildable = false;
 
+                if (!_city.CityArea.Contains(area))
+                    Buildable = false;
+
                 BuildCost = _e.Dictionaryof_BuildItems[Building].Cost;
 
             }
@@ -508,13 +504,15 @@ namespace Colnaught
         {
             for (int x = P.X - 4; x <= P.X + 4; x++)
                 for (int y = P.Y - 4; y <= P.Y + 4; y++)
-                    if (x == P.X || y == P.Y)
-                        _city.TileMap[x, y].ClearConnections();
+                    if (_city.CityArea.Contains(new Point(x, y)))
+                        if (x == P.X || y == P.Y)
+                            _city.TileMap[x, y].ClearConnections();
 
             for (int x = P.X - 4; x <= P.X + 4; x++)
                 for (int y = P.Y - 4; y <= P.Y + 4; y++)
-                    if (x == P.X || y == P.Y)
-                        ConnectTile(new Point(x, y));
+                    if (_city.CityArea.Contains(new Point(x, y)))
+                        if (x == P.X || y == P.Y)
+                            ConnectTile(new Point(x, y));
         }
 
         void ConnectTile(Point P)
@@ -522,7 +520,7 @@ namespace Colnaught
             //Check all tiles in range of 4
             if (_city.CityArea.Contains(P))
             {
-                Listof_BuildTypes type = _e.Dictionaryof_BuildItems[_city.TileMap[P.X, P.Y].Type].BuildingType;                
+                Listof_BuildTypes type = _e.Dictionaryof_BuildItems[_city.TileMap[P.X, P.Y].Type].BuildingType;
 
                 for (int x = P.X + 1; x <= P.X + 4; x++) //x>
                     if (CheckTile(x, P.Y, P.X, P.Y, type)) break;

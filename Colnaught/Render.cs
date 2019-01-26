@@ -228,10 +228,36 @@ namespace Colnaught
                 if (item.Value.Type == Listof_ButtonType.Button) spriteBatch.Draw(TileTexture[(int)Listof_Texture.Button1], item.Value.Location, item.Value.color);
             }
 
+            //RCI
+            Vector2 RCI = new Vector2(Screen_Size.X - 400, Screen_Size.Y - 200);
+
+            spriteBatch.DrawString(basicfont, "R", RCI + new Vector2(0, 0), Color.Green);
+            spriteBatch.DrawString(basicfont, "C", RCI + new Vector2(30, 0), Color.Blue);
+            spriteBatch.DrawString(basicfont, "I", RCI + new Vector2(60, 0), Color.Orange);
+
+            spriteBatch.DrawString(basicfont, _city.ResidentialDemand.ToString(), RCI + new Vector2(0, 160), Color.Green);
+            spriteBatch.DrawString(basicfont, _city.CommercialDemand.ToString(), RCI + new Vector2(30, 160), Color.Blue);
+            spriteBatch.DrawString(basicfont, _city.IndustrialDemand.ToString(), RCI + new Vector2(60, 160), Color.Orange);
+
+            spriteBatch.Draw(TileTexture[(int)Listof_Texture.Panel1], new Rectangle((int)RCI.X - 2, (int)RCI.Y + 30 - 2, 28, 104), Color.SteelBlue);
+            spriteBatch.Draw(TileTexture[(int)Listof_Texture.Panel1], new Rectangle((int)RCI.X, (int)RCI.Y + 30, 24, Convert.ToInt32(_city.ResidentialDemand / 10)), Color.Silver);
+
+            spriteBatch.Draw(TileTexture[(int)Listof_Texture.Panel1], new Rectangle((int)RCI.X + 30 - 2, (int)RCI.Y + 30 - 2, 28, 104), Color.SteelBlue);
+            spriteBatch.Draw(TileTexture[(int)Listof_Texture.Panel1], new Rectangle((int)RCI.X + 30, (int)RCI.Y + 30, 24, Convert.ToInt32(_city.CommercialDemand / 10)), Color.Silver);
+
+            spriteBatch.Draw(TileTexture[(int)Listof_Texture.Panel1], new Rectangle((int)RCI.X + 60 - 2, (int)RCI.Y + 30 - 2, 28, 104), Color.SteelBlue);
+            spriteBatch.Draw(TileTexture[(int)Listof_Texture.Panel1], new Rectangle((int)RCI.X + 60, (int)RCI.Y + 30, 24, Convert.ToInt32(_city.IndustrialDemand / 10)), Color.Silver);
 
 
+            //Day Timer
+            spriteBatch.Draw(TileTexture[(int)Listof_Texture.Panel1], new Rectangle(18, Screen_Size.Y - 162, 104, 24), Color.SteelBlue);
+            spriteBatch.Draw(TileTexture[(int)Listof_Texture.Panel1], new Rectangle(20, Screen_Size.Y - 160, Convert.ToInt32(DayCounter), 20), Color.Silver);
 
-            spriteBatch.DrawString(basicfont, "$" + Currency.ToString(), new Vector2(Screen_Size.X - 300, Screen_Size.Y - 200), Color.White);
+            spriteBatch.DrawString(basicfont, "Day " + Date.ToString(), new Vector2(20, Screen_Size.Y - 200), Color.White);
+
+
+            spriteBatch.DrawString(basicfont, "+$" + Income.ToString(), new Vector2(Screen_Size.X - 300, Screen_Size.Y - 200), Color.LightGreen);
+            spriteBatch.DrawString(basicfont, "$" + Currency.ToString(), new Vector2(Screen_Size.X - 300, Screen_Size.Y - 180), Color.White);
 
             if (BuildCost > 0)
                 spriteBatch.DrawString(basicfont, "-$" + BuildCost.ToString(), Mouse.GetState().Position.ToVector2() + new Vector2(20, -20), Color.White);
@@ -252,15 +278,34 @@ namespace Colnaught
 
                 spriteBatch.DrawString(basicfont, "Tile: X=" + sel_pos.X.ToString()
                                                  + " Y=" + sel_pos.Y.ToString(), new Vector2(0, 100), Color.White);
+
+                spriteBatch.DrawString(basicfont, "Value: " + _city.TileMap[sel_pos.X, sel_pos.Y].LandValue.ToString(), new Vector2(0, 120), Color.White);
             }
 
+            spriteBatch.DrawString(basicfont, "Worker Supply: " + _city.WorkersSupply.ToString(), new Vector2(300, 0), Color.White);
+            spriteBatch.DrawString(basicfont, "Worker Demand: " + _city.WorkersDemand.ToString(), new Vector2(300, 20), Color.White);
+            spriteBatch.DrawString(basicfont, "Worker Market: " + _city.WorkerMarket.ToString(), new Vector2(300, 40), Color.White);
+
+            spriteBatch.DrawString(basicfont, "Commerce Supply: " + _city.CommerceSupply.ToString(), new Vector2(300, 60), Color.White);
+            spriteBatch.DrawString(basicfont, "Commerce Demand: " + _city.CommerceDemand.ToString(), new Vector2(300, 80), Color.White);
+            spriteBatch.DrawString(basicfont, "Commerce Market: " + _city.CommerceMarket.ToString(), new Vector2(300, 100), Color.White);
+
+            spriteBatch.DrawString(basicfont, "Products Supply: " + _city.ProductsSupply.ToString(), new Vector2(300, 120), Color.White);
+            spriteBatch.DrawString(basicfont, "Products Demand: " + _city.ProductsDemand.ToString(), new Vector2(300, 140), Color.White);
+            spriteBatch.DrawString(basicfont, "Products Market: " + _city.ProductsMarket.ToString(), new Vector2(300, 160), Color.White);
+
+            spriteBatch.DrawString(basicfont, "Excess Products: " + _city.ExcessProducts.ToString(), new Vector2(300, 180), Color.White);
+            spriteBatch.DrawString(basicfont, "Excess Commerce: " + _city.ExcessCommerce.ToString(), new Vector2(300, 200), Color.White);
+
+
+
             foreach (var district in _city.districts)
-            {
-                spriteBatch.DrawString(basicfont, "Workers: " + district.Workers.ToString(), new Vector2(300, 0), Color.White);
-                spriteBatch.DrawString(basicfont, "Jobs: " + district.Jobs[0].ToString(), new Vector2(300, 20), Color.White);
-                spriteBatch.DrawString(basicfont, "JobMarket: " + district.JobMarket.ToString(), new Vector2(300, 40), Color.White);
-                spriteBatch.DrawString(basicfont, "Products: " + district.Products.ToString(), new Vector2(300, 60), Color.White);
-                spriteBatch.DrawString(basicfont, "Commerce: " + district.Commerce[0].ToString(), new Vector2(300, 80), Color.White);
+            {               
+                //spriteBatch.DrawString(basicfont, "Workers: " + district.Workers.ToString(), new Vector2(300, 0), Color.White);
+                //spriteBatch.DrawString(basicfont, "Jobs: " + district.Jobs[0].ToString(), new Vector2(300, 20), Color.White);
+                //spriteBatch.DrawString(basicfont, "JobMarket: " + district.JobMarket.ToString(), new Vector2(300, 40), Color.White);
+                //spriteBatch.DrawString(basicfont, "Products: " + district.Products.ToString(), new Vector2(300, 60), Color.White);
+                //spriteBatch.DrawString(basicfont, "Commerce: " + district.Commerce[0].ToString(), new Vector2(300, 80), Color.White);
 
             }
 

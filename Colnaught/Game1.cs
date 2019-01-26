@@ -78,11 +78,13 @@ namespace Colnaught
 
 
         long Currency = 10000;
+        long Income = 0;
 
+        long Date = 0;
 
-
-
-        int count;
+        double DayCounter = 0;
+        double DaySpeed = 60f / 10f;
+        
 
 
         public Game1()
@@ -192,24 +194,27 @@ namespace Colnaught
             
 
             UI_MouseDrag();
-            Update_Interface();
-            _city.Calculate_Land_Value();
+            Update_Interface();            
 
 
             //_city.Calculate_Growth();
 
-            if (count >= 10)
+            if (DayCounter >= 100)
             {
-                for (int x = 0; x < 10; x++)
-                    _city.Calculate_Growth();
-
-
+                _city.Calculate_Land_Value();
+                _city.Calculate_Growth();
+                
                 _city.Calculate_Traffic();
                 _city.Calculate_JPC();
-                Currency += _city.Calculate_Taxes();
-                count = 0;
+
+
+                Income = _city.Calculate_Taxes();
+                Currency += Income;
+                DayCounter = 0;
+                Date++;
             }
-            count++;
+
+            DayCounter += DaySpeed;
 
 
             base.Update(gameTime);

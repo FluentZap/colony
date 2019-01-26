@@ -276,3 +276,47 @@ R	If there are jobs there is R demand. Multiplied by People Satisfaction.
 C
 
 I
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Traffic is crawled and sprawls out from it's start
+
+Every tile has an origin tile.
+
+All the Suppliers are added to a list.
+They cycle and sprawl out from origin point.
+
+If they hit a similar 
+
+
+First the Job Calculation is done.
+Then Industry
+Then Commerce
+Taking into account slower paths.
+
+
+
+
+People want to move in if there is
+
+Jobs
+Needs are met
+
+Commerce is spent to make people happy,
+100% commerce gives max growth.
+
+Residential = Needed Jobs + 
