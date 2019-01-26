@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Colnaught
 {
@@ -59,23 +56,23 @@ namespace Colnaught
         public int ID = 0;
 
         public int tier = 0;
-        public int OriginJobs = 0;
-        public int OriginCommerce = 0;
-        public int OriginProducts = 0;
+        public float OriginJobs = 0;
+        public float OriginCommerce = 0;
+        public float OriginProducts = 0;
 
-        public int DestJobs = 0;
-        public int DestCommerce = 0;
-        public int DestProducts = 0;
+        public float DestJobs = 0;
+        public float DestCommerce = 0;
+        public float DestProducts = 0;
 
         //Road tiles only have Transfer traffic
 
-        public int OriginJobs_Transfer = 0;
-        public int OriginCommerce_Transfer = 0;
-        public int OriginProducts_Transfer = 0;
+        public float OriginJobs_Transfer = 0;
+        public float OriginCommerce_Transfer = 0;
+        public float OriginProducts_Transfer = 0;
 
-        public int DestJobs_Transfer = 0;
-        public int DestCommerce_Transfer = 0;
-        public int DestProducts_Transfer = 0;
+        public float DestJobs_Transfer = 0;
+        public float DestCommerce_Transfer = 0;
+        public float DestProducts_Transfer = 0;
 
 
         public void AddToTransfer(Tile_Traffic Source, int Split)
@@ -137,7 +134,7 @@ namespace Colnaught
         public int LandValue;
         public bool Buildable = false;
         public Tile_Traffic Traffic = new Tile_Traffic();
-        
+
 
         public City_Tyle[] RoadContacts = new City_Tyle[16];
         public int ConnectedItems = 0;
@@ -225,19 +222,19 @@ namespace Colnaught
             foreach (var item in RoadContacts)
                 if (item != null)
                     Traffic.AddToTransfer(item.Traffic, item.ConnectedItems);
-        }               
+        }
 
 
 
-            //Might not need the overhead yet
-            //Connection.AddConnectedRoad(this);        
-
-
-     
+        //Might not need the overhead yet
+        //Connection.AddConnectedRoad(this);        
 
 
 
-        
+
+
+
+
 
 
     }
@@ -246,7 +243,7 @@ namespace Colnaught
 
     class District
     {
-        public string Name;        
+        public string Name;
         public Rectangle Area;
         public SortedDictionary<int, HashSet<Point>> ValueList = new SortedDictionary<int, HashSet<Point>>();
         public int[] Population = new int[4];
@@ -304,7 +301,7 @@ namespace Colnaught
             {
                 ValueList.Add(x, new HashSet<Point>());
             }
-            
+
         }
 
 
@@ -335,6 +332,18 @@ namespace Colnaught
         public Rectangle CityArea;
         public City_Tyle[,] TileMap;
         public HashSet<District> districts;
+        public double ResidentialDemand = 0, CommercialDemand = 0, IndustrialDemand = 0;
+
+
+        public int WorkersSupply = 0, ProductsSupply = 0, CommerceSupply = 0;
+        public int WorkersDemand = 0, ProductsDemand = 0, CommerceDemand = 0;
+        public int ExcessProducts = 0;
+        public int ExcessCommerce = 0;
+
+        public float MaxGrowthRate = 5;
+        public double WorkerMarket = 0, ProductsMarket = 0, CommerceMarket = 0;
+
+
         Encyclopedia _e;
 
         public City(Point CitySize, Encyclopedia _e)
@@ -353,8 +362,8 @@ namespace Colnaught
 
         public District GetDistrictByPoint(Point P)
         {
-            foreach (var district in districts)            
-                if (district.Area.Contains(P)) return district;            
+            foreach (var district in districts)
+                if (district.Area.Contains(P)) return district;
             return null;
         }
 
@@ -389,51 +398,92 @@ namespace Colnaught
                     {
                         //Temp setup
                         City_Tyle T = TileMap[x, y];
-                        
-                        if (_e.Dictionaryof_BuildItems[T.Type].BuildingType == Listof_BuildTypes.Road)                                                    
+
+                        if (_e.Dictionaryof_BuildItems[T.Type].BuildingType == Listof_BuildTypes.Road)
                             Traff.AddToBoth(T.Traffic);
                     }
 
-                int Workers = 0, Jobs = 0, Products = 0, Commerce = 0;
-                double JobMarket = 0;
+                //int WorkersSupply = 0, ProductsSupply = 0, CommerceSupply = 0;
+                //int WorkersDemand = 0, ProductsDemand = 0, CommerceDemand = 0;
+                //int ProductsAfterCommerce = 0;               
 
-                Workers = Traff.OriginJobs_Transfer;
-                Jobs = Traff.DestJobs_Transfer;
-                if (Jobs > 0)
-                    JobMarket = (double)Workers / Jobs;
+                //float MaxGrowthRate = 5;
+                //double WorkerMarket = 0, ProductsMarket = 0, CommerceMarket = 0;
+
+                WorkersSupply = Convert.ToInt32(Traff.OriginJobs_Transfer);
+                WorkersDemand = Convert.ToInt32(Traff.DestJobs_Transfer);
+
+                //Worker to Job Ratio
+                if (WorkersDemand > 0)
+                    WorkerMarket = (double)WorkersSupply / WorkersDemand;
                 else
-                    JobMarket = 0;
-                if (JobMarket > 1) JobMarket = 1;
+                    WorkerMarket = 0;
+                //Job market ratio cap
+                if (WorkerMarket > 1) WorkerMarket = 1;
 
-                Products = Convert.ToInt32(Math.Floor(Traff.OriginProducts_Transfer * JobMarket));
+                ProductsSupply = Convert.ToInt32(Math.Floor(Traff.OriginProducts_Transfer * WorkerMarket));
+                ProductsDemand = Convert.ToInt32(Math.Floor(Traff.DestProducts_Transfer * WorkerMarket));
 
-                if (Traff.DestProducts_Transfer  > 0)
+
+                ExcessProducts = ProductsSupply - ProductsDemand;
+                ExcessCommerce = CommerceSupply - CommerceDemand;
+
+                double CommerceBoost = 0;
+                double IndustryBoost = 0;
+
+                //Industry To Commerce
+                if (ProductsDemand > 0)
                 {
-                    int Capacity = Convert.ToInt32(Math.Floor(Traff.DestProducts_Transfer * JobMarket));
+                    ProductsMarket = (double)ProductsSupply / ProductsDemand;
+                    if (ProductsMarket > 1) ProductsMarket = 1;
+                    CommerceSupply = Convert.ToInt32(Math.Floor(Traff.OriginCommerce_Transfer * ProductsMarket));
 
-                    if (Capacity >= Products)
-                    {                    
-                        Commerce = Products;
-                        Products = 0;
-                    }
-                    else
-                    {
-                        Commerce = Capacity;
-                        Products -= Capacity;
-                    }
-                }                    
+                    IndustryBoost = WorkerMarket;
+                }
                 else
-                    Commerce = 0;
+                    CommerceSupply = 0;
 
-                district.Workers = Workers;
-                district.Jobs[0] = Jobs;
-                district.JobMarket = JobMarket;
-                district.Products = Products;
-                district.Commerce[0] = Commerce;
+                CommerceDemand = Convert.ToInt32(Math.Floor(Traff.DestCommerce_Transfer));
+                
+
+                //Commerce To Residential
+                if (CommerceDemand > 0)
+                {
+                    CommerceMarket = (double)CommerceSupply / CommerceDemand;
+                    if (CommerceMarket > 1) CommerceMarket = 1;
+                    CommerceBoost = 0.5 + (0.5 * CommerceMarket);
+                }
+                else
+                    CommerceMarket = 0;
+
+
+                district.Workers = WorkersSupply;
+                district.Jobs[0] = WorkersDemand;
+                district.JobMarket = WorkerMarket;
+                district.Products = ExcessProducts;
+                district.Commerce[0] = CommerceSupply;
+
+                
+                //ResidentialDemand = WorkersDemand - (WorkersSupply * CommerceBoost);
+
+                ResidentialDemand = WorkersDemand - WorkersSupply;
+
+                CommercialDemand = Traff.DestCommerce_Transfer - Traff.OriginCommerce_Transfer;
+
+                //IndustrialDemand = (Traff.DestProducts_Transfer - Traff.OriginProducts_Transfer) + (WorkersSupply - WorkersDemand);
+
+                IndustrialDemand = Traff.DestProducts_Transfer - Traff.OriginProducts_Transfer;
 
             }
-        }
+        }                
 
+
+        enum ListOf_RCI
+        {
+            R,
+            C,
+            I
+        }
 
 
         public void Calculate_Growth()
@@ -447,127 +497,202 @@ namespace Colnaught
                     if (district.ValueList[v].Count > 0)
                     {
                         foreach (var t in district.ValueList[v])
-                        {
-                            //**********Residential**********
-                            if (TileMap[t.X, t.Y].Type == Listof_Structures.ZoneResidential)
+                        {                            
+                            City_Tyle Tile = TileMap[t.X, t.Y];
+                            ListOf_RCI First = ListOf_RCI.R, Seccond = ListOf_RCI.C, Third = ListOf_RCI.I;
+
+
+                            if (ResidentialDemand >= CommercialDemand && ResidentialDemand >= IndustrialDemand)
                             {
-                                TileMap[t.X, t.Y].Type = Listof_Structures.Residential_1;
-                                Built = true;
-                                break;
+                                First = ListOf_RCI.R;
+                                if (CommercialDemand >= IndustrialDemand)
+                                { Seccond = ListOf_RCI.C; Third = ListOf_RCI.I; }
+                                else
+                                { Seccond = ListOf_RCI.I; Third = ListOf_RCI.C; }                                
                             }
 
-                            if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_1 && v > 8 && TileMap[t.X, t.Y].Traffic.tier < 4)
+                            if (CommercialDemand >= ResidentialDemand && CommercialDemand >= IndustrialDemand)
                             {
-                                TileMap[t.X, t.Y].Type = Listof_Structures.Residential_2;
-                                TileMap[t.X, t.Y].SpriteIndex = 1;
-                                Built = true;
-                                break;
+                                First = ListOf_RCI.C;
+                                if (ResidentialDemand >= IndustrialDemand)
+                                { Seccond = ListOf_RCI.R; Third = ListOf_RCI.I; }
+                                else
+                                { Seccond = ListOf_RCI.I; Third = ListOf_RCI.R; }
                             }
 
-                            if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_2 && v > 16)
+                            if (IndustrialDemand >= ResidentialDemand && IndustrialDemand >= CommercialDemand)
                             {
-                                TileMap[t.X, t.Y].Type = Listof_Structures.Residential_3;
-                                TileMap[t.X, t.Y].SpriteIndex = 2;
-                                Built = true;
-                                break;
-                            }
-
-                            if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_3 && v > 30)
-                            {
-                                TileMap[t.X, t.Y].Type = Listof_Structures.Residential_4;
-                                TileMap[t.X, t.Y].SpriteIndex = 3;
-                                Built = true;
-                                break;
-                            }
-
-                            if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_4 && v > 40)
-                            {
-                                TileMap[t.X, t.Y].Type = Listof_Structures.Residential_5;
-                                TileMap[t.X, t.Y].SpriteIndex = 4;
-                                Built = true;
-                                break;
-                            }
-
-                            //**********Commercial**********
-                            if (TileMap[t.X, t.Y].Type == Listof_Structures.ZoneCommercial)
-                            {
-                                TileMap[t.X, t.Y].Type = Listof_Structures.Commercial_1;
-                                Built = true;
-                                break;
-                            }
-
-                            if (TileMap[t.X, t.Y].Type == Listof_Structures.Commercial_1 && v > 40)
-                            {
-                                TileMap[t.X, t.Y].Type = Listof_Structures.Commercial_2;
-                                TileMap[t.X, t.Y].SpriteIndex = 4;
-                                Built = true;
-                                break;
-                            }
-                            if (TileMap[t.X, t.Y].Type == Listof_Structures.Commercial_2 && v > 40)
-                            {
-                                TileMap[t.X, t.Y].Type = Listof_Structures.Commercial_3;
-                                TileMap[t.X, t.Y].SpriteIndex = 4;
-                                Built = true;
-                                break;
-                            }
-                            if (TileMap[t.X, t.Y].Type == Listof_Structures.Commercial_3 && v > 40)
-                            {
-                                TileMap[t.X, t.Y].Type = Listof_Structures.Commercial_4;
-                                TileMap[t.X, t.Y].SpriteIndex = 4;
-                                Built = true;
-                                break;
-                            }
-                            if (TileMap[t.X, t.Y].Type == Listof_Structures.Commercial_5 && v > 40)
-                            {
-                                TileMap[t.X, t.Y].Type = Listof_Structures.Commercial_5;
-                                TileMap[t.X, t.Y].SpriteIndex = 4;
-                                Built = true;
-                                break;
+                                First = ListOf_RCI.I;
+                                if (ResidentialDemand >= CommercialDemand)
+                                { Seccond = ListOf_RCI.R; Third = ListOf_RCI.C; }
+                                else
+                                { Seccond = ListOf_RCI.C; Third = ListOf_RCI.R; }
                             }
 
 
-                            //**********Industrial**********
-                            if (TileMap[t.X, t.Y].Type == Listof_Structures.ZoneIndustrial)
+                            if (First == ListOf_RCI.R && !Built) Grow_Residential();
+                            if (First == ListOf_RCI.C && !Built) Grow_Commercial();
+                            if (First == ListOf_RCI.I && !Built) Grow_Industrial();
+
+                            if (Seccond == ListOf_RCI.R && !Built) Grow_Residential();
+                            if (Seccond == ListOf_RCI.C && !Built) Grow_Commercial();
+                            if (Seccond == ListOf_RCI.I && !Built) Grow_Industrial();
+
+                            if (Third == ListOf_RCI.R && !Built) Grow_Residential();
+                            if (Third == ListOf_RCI.C && !Built) Grow_Commercial();
+                            if (Third == ListOf_RCI.I && !Built) Grow_Industrial();
+
+
+
+
+                            bool Grow_Residential()
                             {
-                                TileMap[t.X, t.Y].Type = Listof_Structures.Industrial_1;
-                                Built = true;
-                                break;
+                                //**********Residential**********
+                                if (TileMap[t.X, t.Y].Type == Listof_Structures.ZoneResidential && ResidentialDemand >= 4)
+                                {
+                                    TileMap[t.X, t.Y].Type = Listof_Structures.Residential_1;
+                                    Built = true;
+                                    return true;
+                                }
+
+                                if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_1 && v > 8 && ResidentialDemand > 8)
+                                {
+                                    TileMap[t.X, t.Y].Type = Listof_Structures.Residential_2;
+                                    TileMap[t.X, t.Y].SpriteIndex = 1;
+                                    Built = true;
+                                    return true;
+                                }
+
+                                if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_2 && v > 12 && ResidentialDemand > 8)
+                                {
+                                    TileMap[t.X, t.Y].Type = Listof_Structures.Residential_3;
+                                    TileMap[t.X, t.Y].SpriteIndex = 2;
+                                    Built = true;
+                                    return true;
+                                }
+
+                                if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_3 && v > 14 && ResidentialDemand > 16)
+                                {
+                                    TileMap[t.X, t.Y].Type = Listof_Structures.Residential_4;
+                                    TileMap[t.X, t.Y].SpriteIndex = 3;
+                                    Built = true;
+                                    return true;
+                                }
+
+                                if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_4 && v > 16)
+                                {
+                                    TileMap[t.X, t.Y].Type = Listof_Structures.Residential_5;
+                                    TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    Built = true;
+                                    return true;
+                                }
+                                return false;
                             }
 
-                            if (TileMap[t.X, t.Y].Type == Listof_Structures.Industrial_1 && v > 40)
+                            bool Grow_Commercial()
                             {
-                                TileMap[t.X, t.Y].Type = Listof_Structures.Industrial_2;
-                                TileMap[t.X, t.Y].SpriteIndex = 4;
-                                Built = true;
-                                break;
+                                //**********Commercial**********
+                                if (TileMap[t.X, t.Y].Type == Listof_Structures.ZoneCommercial && CommercialDemand >= 10)
+                                {
+                                    TileMap[t.X, t.Y].Type = Listof_Structures.Commercial_1;
+                                    Built = true;
+                                    return true;
+                                }
+
+                                if (TileMap[t.X, t.Y].Type == Listof_Structures.Commercial_1 && v > 40)
+                                {
+                                    TileMap[t.X, t.Y].Type = Listof_Structures.Commercial_2;
+                                    TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    Built = true;
+                                    return true;
+                                }
+                                if (TileMap[t.X, t.Y].Type == Listof_Structures.Commercial_2 && v > 40)
+                                {
+                                    TileMap[t.X, t.Y].Type = Listof_Structures.Commercial_3;
+                                    TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    Built = true;
+                                    return true;
+                                }
+                                if (TileMap[t.X, t.Y].Type == Listof_Structures.Commercial_3 && v > 40)
+                                {
+                                    TileMap[t.X, t.Y].Type = Listof_Structures.Commercial_4;
+                                    TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    Built = true;
+                                    return true;
+                                }
+                                if (TileMap[t.X, t.Y].Type == Listof_Structures.Commercial_5 && v > 40)
+                                {
+                                    TileMap[t.X, t.Y].Type = Listof_Structures.Commercial_5;
+                                    TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    Built = true;
+                                    return true;
+                                }
+                                return false;
                             }
-                            if (TileMap[t.X, t.Y].Type == Listof_Structures.Industrial_2 && v > 40)
+
+                            bool Grow_Industrial()
                             {
-                                TileMap[t.X, t.Y].Type = Listof_Structures.Industrial_3;
-                                TileMap[t.X, t.Y].SpriteIndex = 4;
-                                Built = true;
-                                break;
+                                //**********Industrial**********
+                                if (TileMap[t.X, t.Y].Type == Listof_Structures.ZoneIndustrial && IndustrialDemand >= 10)
+                                {
+                                    TileMap[t.X, t.Y].Type = Listof_Structures.Industrial_1;
+                                    Built = true;
+                                    return true;
+                                }
+
+                                if (TileMap[t.X, t.Y].Type == Listof_Structures.Industrial_1 && v > 40)
+                                {
+                                    TileMap[t.X, t.Y].Type = Listof_Structures.Industrial_2;
+                                    TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    Built = true;
+                                    return true;
+                                }
+                                if (TileMap[t.X, t.Y].Type == Listof_Structures.Industrial_2 && v > 40)
+                                {
+                                    TileMap[t.X, t.Y].Type = Listof_Structures.Industrial_3;
+                                    TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    Built = true;
+                                    return true;
+                                }
+                                if (TileMap[t.X, t.Y].Type == Listof_Structures.Industrial_3 && v > 40)
+                                {
+                                    TileMap[t.X, t.Y].Type = Listof_Structures.Industrial_4;
+                                    TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    Built = true;
+                                    return true;
+                                }
+                                if (TileMap[t.X, t.Y].Type == Listof_Structures.Industrial_4 && v > 40)
+                                {
+                                    TileMap[t.X, t.Y].Type = Listof_Structures.Industrial_5;
+                                    TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    Built = true;
+                                    return true;
+                                }
+                                return false;
+
                             }
-                            if (TileMap[t.X, t.Y].Type == Listof_Structures.Industrial_3 && v > 40)
-                            {
-                                TileMap[t.X, t.Y].Type = Listof_Structures.Industrial_4;
-                                TileMap[t.X, t.Y].SpriteIndex = 4;
-                                Built = true;
-                                break;
-                            }
-                            if (TileMap[t.X, t.Y].Type == Listof_Structures.Industrial_4 && v > 40)
-                            {
-                                TileMap[t.X, t.Y].Type = Listof_Structures.Industrial_5;
-                                TileMap[t.X, t.Y].SpriteIndex = 4;
-                                Built = true;
-                                break;
-                            }
+
                         }
                         if (Built) break;
                     }
                 }
             }
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

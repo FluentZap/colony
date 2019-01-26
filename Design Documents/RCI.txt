@@ -1,0 +1,74 @@
+RCI Calculation
+
+
+Basic Demand Theory
+
+
+
+Terms
+
+Max Growth Rate		The maximum amount a district can grow a day.
+Commerce Supply		Percentage of supplied commerce to demand.
+
+
+
+
+
+"Perfect RCI"
+
+
+-----Residential-----
+Max Growth Rate 		= Residential Demand * 5
+
+Residential Demand 		= Available Jobs * ((Commerce Supply% - 0.5) * 2)
+
+
+
+
+-----Commercial-----
+Commercial Demand		= Commerce Demand - Commerce Supply
+
+
+
+
+-----Industrial-----
+Industrial Demand		= Products Demand - Products Supply + Unemployed Residential * ((Commerce Supply% - 0.5) * 2)
+
+
+
+
+
+RCI Ratios
+Type	WorkerS		WorkerD		CommerceS	CommerceD	ProductsS	ProductsD
+R		4			0			0			2			0			0
+
+C		0			6			10			0			0			4
+
+I		0			20			0			0			10			0
+
+
+
+
+40		160									80
+10					60			100									40
+5					100									50
+
+
+
+
+
+
+40		200									80
+10					100			80									40
+5					100									40
+
+
+
+Excess Residential Gives
+	Nothing
+
+Excess Commercial Gives
+	Converted to Income
+
+Excess Industrial Gives
+	Products for factories
