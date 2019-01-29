@@ -133,6 +133,8 @@ namespace Colnaught
         public int SpriteIndex = 0;
         public int LandValue;
         public bool Buildable = false;
+        public int Growth = 0;
+
         public Tile_Traffic Traffic = new Tile_Traffic();
 
 
@@ -466,13 +468,9 @@ namespace Colnaught
                 
                 //ResidentialDemand = WorkersDemand - (WorkersSupply * CommerceBoost);
 
-                ResidentialDemand = WorkersDemand - WorkersSupply;
-
-                CommercialDemand = Traff.DestCommerce_Transfer - Traff.OriginCommerce_Transfer;
-
-                //IndustrialDemand = (Traff.DestProducts_Transfer - Traff.OriginProducts_Transfer) + (WorkersSupply - WorkersDemand);
-
-                IndustrialDemand = Traff.DestProducts_Transfer - Traff.OriginProducts_Transfer;
+                ResidentialDemand = -25 + (Traff.DestJobs_Transfer * 2) - Traff.OriginJobs_Transfer;
+                CommercialDemand = -25 + (Traff.DestCommerce_Transfer * 2) - Traff.OriginCommerce_Transfer;
+                IndustrialDemand = 50 + (Traff.DestProducts_Transfer * 2) - Traff.OriginProducts_Transfer;
 
             }
         }                
@@ -490,10 +488,10 @@ namespace Colnaught
         {
             foreach (var district in districts)
             {
+                bool Built = false;
                 for (int v = 255; v >= 0; v--)
                 {
-                    //One at a time
-                    bool Built = false;
+                    //One at a time                    
                     if (district.ValueList[v].Count > 0)
                     {
                         foreach (var t in district.ValueList[v])
@@ -671,12 +669,23 @@ namespace Colnaught
                                 return false;
 
                             }
-
-                        }
-                        if (Built) break;
+                            if (Built) break;
+                        }                        
                     }
+                    if (Built) break;
                 }
             }
+
+
+            foreach (var district in districts)                            
+                for (int v = 255; v >= 0; v--)                                             
+                    if (district.ValueList[v].Count > 0)                    
+                        foreach (var t in district.ValueList[v])
+                        {
+                            if (TileMap[t.X, t.Y].
+                            
+
+                        }
         }
 
 
