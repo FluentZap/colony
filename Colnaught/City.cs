@@ -66,36 +66,29 @@ namespace Colnaught
 
         //Road tiles only have Transfer traffic
 
-        public float OriginJobs_Transfer = 0;
-        public float OriginCommerce_Transfer = 0;
-        public float OriginProducts_Transfer = 0;
+        
 
-        public float DestJobs_Transfer = 0;
-        public float DestCommerce_Transfer = 0;
-        public float DestProducts_Transfer = 0;
-
-
-        public void AddToTransfer(Tile_Traffic Source, int Split)
+        public void AddTrafficToRoad(Tile_Traffic Source, int Split)
         {
-            OriginJobs_Transfer += Source.OriginJobs / Split;
-            OriginCommerce_Transfer += Source.OriginCommerce / Split;
-            OriginProducts_Transfer += Source.OriginProducts / Split;
+            OriginJobs += Source.OriginJobs / Split;
+            OriginCommerce += Source.OriginCommerce / Split;
+            OriginProducts += Source.OriginProducts / Split;
 
-            DestJobs_Transfer += Source.DestJobs / Split;
-            DestCommerce_Transfer += Source.DestCommerce / Split;
-            DestProducts_Transfer += Source.DestProducts / Split;
+            DestJobs += Source.DestJobs / Split;
+            DestCommerce += Source.DestCommerce / Split;
+            DestProducts += Source.DestProducts / Split;
         }
 
 
-        public void AddToBoth(Tile_Traffic Source)
+        public void AddTrafficFrom(Tile_Traffic Source)
         {
-            OriginJobs_Transfer += Source.OriginJobs + Source.OriginJobs_Transfer;
-            OriginCommerce_Transfer += Source.OriginCommerce + Source.OriginCommerce_Transfer;
-            OriginProducts_Transfer += Source.OriginProducts + Source.OriginProducts_Transfer;
+            OriginJobs += Source.OriginJobs;
+            OriginCommerce += Source.OriginCommerce;
+            OriginProducts += Source.OriginProducts;
 
-            DestJobs_Transfer += Source.DestJobs + Source.DestJobs_Transfer;
-            DestCommerce_Transfer += Source.DestCommerce + Source.DestCommerce_Transfer;
-            DestProducts_Transfer += Source.DestProducts + Source.DestProducts_Transfer;
+            DestJobs += Source.DestJobs;
+            DestCommerce += Source.DestCommerce;
+            DestProducts += Source.DestProducts;
         }
 
 
@@ -108,14 +101,7 @@ namespace Colnaught
             DestJobs = 0;
             DestCommerce = 0;
             DestProducts = 0;
-
-            OriginJobs_Transfer = 0;
-            OriginCommerce_Transfer = 0;
-            OriginProducts_Transfer = 0;
-
-            DestJobs_Transfer = 0;
-            DestCommerce_Transfer = 0;
-            DestProducts_Transfer = 0;
+            
             Parent = null;
             tier = 0;
             ID = 0;
@@ -134,6 +120,7 @@ namespace Colnaught
         public int LandValue;
         public bool Buildable = false;
         public int Growth = 0;
+        public bool Constructing = false;
 
         public Tile_Traffic Traffic = new Tile_Traffic();
 
@@ -223,7 +210,7 @@ namespace Colnaught
 
             foreach (var item in RoadContacts)
                 if (item != null)
-                    Traffic.AddToTransfer(item.Traffic, item.ConnectedItems);
+                    Traffic.AddTrafficToRoad(item.Traffic, item.ConnectedItems);
         }
 
 
@@ -335,7 +322,7 @@ namespace Colnaught
         public City_Tyle[,] TileMap;
         public HashSet<District> districts;
         public double ResidentialDemand = 0, CommercialDemand = 0, IndustrialDemand = 0;
-
+        public Tile_Traffic Projected_Traffic = new Tile_Traffic();
 
         public int WorkersSupply = 0, ProductsSupply = 0, CommerceSupply = 0;
         public int WorkersDemand = 0, ProductsDemand = 0, CommerceDemand = 0;
@@ -350,7 +337,7 @@ namespace Colnaught
 
         public City(Point CitySize, Encyclopedia _e)
         {
-            this.CityArea = new Rectangle(new Point(0, 0), CitySize);
+            CityArea = new Rectangle(new Point(0, 0), CitySize);
             TileMap = new City_Tyle[CitySize.X, CitySize.Y];
             districts = new HashSet<District>();
             this._e = _e;
@@ -406,7 +393,7 @@ namespace Colnaught
                         City_Tyle T = TileMap[x, y];
 
                         if (_e.Dictionaryof_BuildItems[T.Type].BuildingType == Listof_BuildTypes.Road)
-                            Traff.AddToBoth(T.Traffic);
+                            Traff.AddTrafficFrom(T.Traffic);
                     }
 
                 //int WorkersSupply = 0, ProductsSupply = 0, CommerceSupply = 0;
@@ -416,8 +403,8 @@ namespace Colnaught
                 //float MaxGrowthRate = 5;
                 //double WorkerMarket = 0, ProductsMarket = 0, CommerceMarket = 0;
 
-                WorkersSupply = Convert.ToInt32(Traff.OriginJobs_Transfer);
-                WorkersDemand = Convert.ToInt32(Traff.DestJobs_Transfer);
+                WorkersSupply = Convert.ToInt32(Traff.OriginJobs);
+                WorkersDemand = Convert.ToInt32(Traff.DestJobs);
 
                 //Worker to Job Ratio
                 if (WorkersDemand > 0)
@@ -427,8 +414,8 @@ namespace Colnaught
                 //Job market ratio cap
                 if (WorkerMarket > 1) WorkerMarket = 1;
 
-                ProductsSupply = Convert.ToInt32(Math.Floor(Traff.OriginProducts_Transfer * WorkerMarket));
-                ProductsDemand = Convert.ToInt32(Math.Floor(Traff.DestProducts_Transfer * WorkerMarket));
+                ProductsSupply = Convert.ToInt32(Math.Floor(Traff.OriginProducts * WorkerMarket));
+                ProductsDemand = Convert.ToInt32(Math.Floor(Traff.DestProducts * WorkerMarket));
 
 
                 ExcessProducts = ProductsSupply - ProductsDemand;
@@ -442,14 +429,14 @@ namespace Colnaught
                 {
                     ProductsMarket = (double)ProductsSupply / ProductsDemand;
                     if (ProductsMarket > 1) ProductsMarket = 1;
-                    CommerceSupply = Convert.ToInt32(Math.Floor(Traff.OriginCommerce_Transfer * ProductsMarket));
+                    CommerceSupply = Convert.ToInt32(Math.Floor(Traff.OriginCommerce * ProductsMarket));
 
                     IndustryBoost = WorkerMarket;
                 }
                 else
                     CommerceSupply = 0;
 
-                CommerceDemand = Convert.ToInt32(Math.Floor(Traff.DestCommerce_Transfer));
+                CommerceDemand = Convert.ToInt32(Math.Floor(Traff.DestCommerce));
 
 
                 //Commerce To Residential
@@ -472,9 +459,9 @@ namespace Colnaught
 
                 //ResidentialDemand = WorkersDemand - (WorkersSupply * CommerceBoost);
 
-                ResidentialDemand = 0 + (Traff.DestJobs_Transfer * 1.15) - Traff.OriginJobs_Transfer;
-                CommercialDemand = -100 + (Traff.DestCommerce_Transfer * 1.10) - Traff.OriginCommerce_Transfer;
-                IndustrialDemand = 100 + (Traff.DestProducts_Transfer * 1.10) - Traff.OriginProducts_Transfer;
+                ResidentialDemand = 0 + (Traff.DestJobs * 1.15) - Traff.OriginJobs - Projected_Traffic.OriginJobs;
+                CommercialDemand = -100 + (Traff.DestCommerce * 1.10) - Traff.OriginCommerce - Projected_Traffic.OriginCommerce;
+                IndustrialDemand = 100 + (Traff.DestProducts * 1.10) - Traff.OriginProducts - Projected_Traffic.OriginProducts;
 
             }
         }
@@ -553,6 +540,7 @@ namespace Colnaught
                                 if (TileMap[t.X, t.Y].Type == Listof_Structures.ZoneResidential && ResidentialDemand >= 4)
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Residential_1;
+                                    TileMap[t.X, t.Y].Constructing = true;
                                     Built = true;
                                     return true;
                                 }
@@ -561,6 +549,7 @@ namespace Colnaught
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Residential_2;
                                     TileMap[t.X, t.Y].SpriteIndex = 2;
+                                    TileMap[t.X, t.Y].Constructing = true;
                                     Built = true;
                                     return true;
                                 }
@@ -569,6 +558,7 @@ namespace Colnaught
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Residential_3;
                                     TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    TileMap[t.X, t.Y].Constructing = true;
                                     Built = true;
                                     return true;
                                 }
@@ -577,6 +567,7 @@ namespace Colnaught
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Residential_4;
                                     TileMap[t.X, t.Y].SpriteIndex = 6;
+                                    TileMap[t.X, t.Y].Constructing = true;
                                     Built = true;
                                     return true;
                                 }
@@ -585,6 +576,7 @@ namespace Colnaught
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Residential_5;
                                     TileMap[t.X, t.Y].SpriteIndex = 8;
+                                    TileMap[t.X, t.Y].Constructing = true;
                                     Built = true;
                                     return true;
                                 }
@@ -597,6 +589,7 @@ namespace Colnaught
                                 if (TileMap[t.X, t.Y].Type == Listof_Structures.ZoneCommercial && CommercialDemand >= 10)
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Commercial_1;
+                                    TileMap[t.X, t.Y].Constructing = true;
                                     Built = true;
                                     return true;
                                 }
@@ -605,6 +598,7 @@ namespace Colnaught
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Commercial_2;
                                     TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    TileMap[t.X, t.Y].Constructing = true;
                                     Built = true;
                                     return true;
                                 }
@@ -612,6 +606,7 @@ namespace Colnaught
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Commercial_3;
                                     TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    TileMap[t.X, t.Y].Constructing = true;
                                     Built = true;
                                     return true;
                                 }
@@ -619,6 +614,7 @@ namespace Colnaught
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Commercial_4;
                                     TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    TileMap[t.X, t.Y].Constructing = true;
                                     Built = true;
                                     return true;
                                 }
@@ -626,6 +622,7 @@ namespace Colnaught
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Commercial_5;
                                     TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    TileMap[t.X, t.Y].Constructing = true;
                                     Built = true;
                                     return true;
                                 }
@@ -638,6 +635,7 @@ namespace Colnaught
                                 if (TileMap[t.X, t.Y].Type == Listof_Structures.ZoneIndustrial && IndustrialDemand >= 10)
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Industrial_1;
+                                    TileMap[t.X, t.Y].Constructing = true;
                                     Built = true;
                                     return true;
                                 }
@@ -646,6 +644,7 @@ namespace Colnaught
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Industrial_2;
                                     TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    TileMap[t.X, t.Y].Constructing = true;
                                     Built = true;
                                     return true;
                                 }
@@ -653,6 +652,7 @@ namespace Colnaught
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Industrial_3;
                                     TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    TileMap[t.X, t.Y].Constructing = true;
                                     Built = true;
                                     return true;
                                 }
@@ -660,6 +660,7 @@ namespace Colnaught
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Industrial_4;
                                     TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    TileMap[t.X, t.Y].Constructing = true;
                                     Built = true;
                                     return true;
                                 }
@@ -667,6 +668,7 @@ namespace Colnaught
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Industrial_5;
                                     TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    TileMap[t.X, t.Y].Constructing = true;
                                     Built = true;
                                     return true;
                                 }
@@ -690,18 +692,40 @@ namespace Colnaught
                             if (_e.Dictionaryof_BuildItems[tile.Type].BuildingType == Listof_BuildTypes.Structure &&
                                 _e.Dictionaryof_BuildItems[tile.Type].ZoneType == Listof_ZoneType.Residential)
                             {
-                                if (tile.SpriteIndex == 0 ||
-                                tile.SpriteIndex == 2 ||
-                                tile.SpriteIndex == 4 ||
-                                tile.SpriteIndex == 6 ||
-                                tile.SpriteIndex == 8)
+                                if (tile.Constructing)
                                     tile.Growth++;
 
-                                if (tile.Growth == 10) tile.SpriteIndex = 1;
-                                if (tile.Growth == 30) tile.SpriteIndex = 3;
-                                if (tile.Growth == 60) tile.SpriteIndex = 5;
-                                if (tile.Growth == 100) tile.SpriteIndex = 7;
-                                if (tile.Growth == 150) tile.SpriteIndex = 9;
+                                if (tile.Growth == 10) { tile.SpriteIndex = 1; tile.Constructing = false; }
+                                if (tile.Growth == 20) { tile.SpriteIndex = 3; tile.Constructing = false; }
+                                if (tile.Growth == 30) { tile.SpriteIndex = 5; tile.Constructing = false; }
+                                if (tile.Growth == 40) { tile.SpriteIndex = 7; tile.Constructing = false; }
+                                if (tile.Growth == 50) { tile.SpriteIndex = 9; tile.Constructing = false; }
+                            }
+
+                            if (_e.Dictionaryof_BuildItems[tile.Type].BuildingType == Listof_BuildTypes.Structure &&
+                                _e.Dictionaryof_BuildItems[tile.Type].ZoneType == Listof_ZoneType.Commercial)
+                            {
+                                if (tile.Constructing)
+                                    tile.Growth++;
+
+                                if (tile.Growth == 10) { tile.SpriteIndex = 1; tile.Constructing = false; }
+                                if (tile.Growth == 20) { tile.SpriteIndex = 3; tile.Constructing = false; }
+                                if (tile.Growth == 30) { tile.SpriteIndex = 5; tile.Constructing = false; }
+                                if (tile.Growth == 40) { tile.SpriteIndex = 7; tile.Constructing = false; }
+                                if (tile.Growth == 50) { tile.SpriteIndex = 9; tile.Constructing = false; }
+                            }
+
+                            if (_e.Dictionaryof_BuildItems[tile.Type].BuildingType == Listof_BuildTypes.Structure &&
+                                _e.Dictionaryof_BuildItems[tile.Type].ZoneType == Listof_ZoneType.Industrial)
+                            {
+                                if (tile.Constructing)
+                                    tile.Growth++;
+
+                                if (tile.Growth == 10) { tile.SpriteIndex = 1; tile.Constructing = false; }
+                                if (tile.Growth == 20) { tile.SpriteIndex = 3; tile.Constructing = false; }
+                                if (tile.Growth == 30) { tile.SpriteIndex = 5; tile.Constructing = false; }
+                                if (tile.Growth == 40) { tile.SpriteIndex = 7; tile.Constructing = false; }
+                                if (tile.Growth == 50) { tile.SpriteIndex = 9; tile.Constructing = false; }
                             }
 
                         }
