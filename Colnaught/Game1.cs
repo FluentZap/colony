@@ -77,8 +77,8 @@ namespace Colnaught
         Encyclopedia _e;
 
 
-        long Currency = 10000;
-        long Income = 0;
+        decimal Currency = 10000;
+        decimal Income = 0;
 
         long Date = 0;
 

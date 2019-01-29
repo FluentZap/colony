@@ -56,8 +56,8 @@ namespace Colnaught
                                 break;
                             case Listof_Structures.Commercial_1:
                                 T.Traffic.DestJobs += 6;
-                                T.Traffic.DestProducts += 4;
-                                T.Traffic.OriginCommerce += 10;
+                                T.Traffic.DestProducts += 5;
+                                T.Traffic.OriginCommerce += 8;
                                 break;
                             case Listof_Structures.Commercial_2:
                                 T.Traffic.DestJobs += 8;

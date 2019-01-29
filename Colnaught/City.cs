@@ -377,14 +377,18 @@ namespace Colnaught
         }
 
 
-        public int Calculate_Taxes()
+        public decimal Calculate_Taxes()
         {
-            int Taxes = 0;
-            foreach (var district in districts)
-            {
-                Taxes += Convert.ToInt32(district.Workers * 0.0025f);
-            }
+            decimal Taxes = 0;
 
+
+            Taxes += Math.Round(WorkersSupply * 0.0005m, 2);
+            Taxes += Math.Round(ProductsSupply * 0.0001m, 2);
+
+            if (CommerceSupply > CommerceDemand)
+                Taxes += Math.Round((CommerceSupply - CommerceDemand) * 0.01m, 2);
+            Taxes += Math.Round(CommerceSupply * 0.01m, 2);
+            
             return Taxes;
         }
 
@@ -446,7 +450,7 @@ namespace Colnaught
                     CommerceSupply = 0;
 
                 CommerceDemand = Convert.ToInt32(Math.Floor(Traff.DestCommerce_Transfer));
-                
+
 
                 //Commerce To Residential
                 if (CommerceDemand > 0)
@@ -465,15 +469,15 @@ namespace Colnaught
                 district.Products = ExcessProducts;
                 district.Commerce[0] = CommerceSupply;
 
-                
+
                 //ResidentialDemand = WorkersDemand - (WorkersSupply * CommerceBoost);
 
-                ResidentialDemand = -25 + (Traff.DestJobs_Transfer * 2) - Traff.OriginJobs_Transfer;
-                CommercialDemand = -25 + (Traff.DestCommerce_Transfer * 2) - Traff.OriginCommerce_Transfer;
-                IndustrialDemand = 50 + (Traff.DestProducts_Transfer * 2) - Traff.OriginProducts_Transfer;
+                ResidentialDemand = 0 + (Traff.DestJobs_Transfer * 1.15) - Traff.OriginJobs_Transfer;
+                CommercialDemand = -100 + (Traff.DestCommerce_Transfer * 1.10) - Traff.OriginCommerce_Transfer;
+                IndustrialDemand = 100 + (Traff.DestProducts_Transfer * 1.10) - Traff.OriginProducts_Transfer;
 
             }
-        }                
+        }
 
 
         enum ListOf_RCI
@@ -495,7 +499,7 @@ namespace Colnaught
                     if (district.ValueList[v].Count > 0)
                     {
                         foreach (var t in district.ValueList[v])
-                        {                            
+                        {
                             City_Tyle Tile = TileMap[t.X, t.Y];
                             ListOf_RCI First = ListOf_RCI.R, Seccond = ListOf_RCI.C, Third = ListOf_RCI.I;
 
@@ -506,7 +510,7 @@ namespace Colnaught
                                 if (CommercialDemand >= IndustrialDemand)
                                 { Seccond = ListOf_RCI.C; Third = ListOf_RCI.I; }
                                 else
-                                { Seccond = ListOf_RCI.I; Third = ListOf_RCI.C; }                                
+                                { Seccond = ListOf_RCI.I; Third = ListOf_RCI.C; }
                             }
 
                             if (CommercialDemand >= ResidentialDemand && CommercialDemand >= IndustrialDemand)
@@ -553,7 +557,7 @@ namespace Colnaught
                                     return true;
                                 }
 
-                                if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_1 && v > 8 && ResidentialDemand > 8)
+                                if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_1 && v > 80 && ResidentialDemand > 8)
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Residential_2;
                                     TileMap[t.X, t.Y].SpriteIndex = 2;
@@ -670,16 +674,16 @@ namespace Colnaught
 
                             }
                             if (Built) break;
-                        }                        
+                        }
                     }
                     if (Built) break;
                 }
             }
 
 
-            foreach (var district in districts)                            
-                for (int v = 255; v >= 0; v--)                                             
-                    if (district.ValueList[v].Count > 0)                    
+            foreach (var district in districts)
+                for (int v = 255; v >= 0; v--)
+                    if (district.ValueList[v].Count > 0)
                         foreach (var t in district.ValueList[v])
                         {
                             City_Tyle tile = TileMap[t.X, t.Y];
@@ -694,12 +698,12 @@ namespace Colnaught
                                     tile.Growth++;
 
                                 if (tile.Growth == 10) tile.SpriteIndex = 1;
-                                if (tile.Growth == 20) tile.SpriteIndex = 3;
-                                if (tile.Growth == 30) tile.SpriteIndex = 5;
-                                if (tile.Growth == 40) tile.SpriteIndex = 7;
-                                if (tile.Growth == 50) tile.SpriteIndex = 9;
+                                if (tile.Growth == 30) tile.SpriteIndex = 3;
+                                if (tile.Growth == 60) tile.SpriteIndex = 5;
+                                if (tile.Growth == 100) tile.SpriteIndex = 7;
+                                if (tile.Growth == 150) tile.SpriteIndex = 9;
                             }
-                            
+
                         }
         }
 
