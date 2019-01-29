@@ -83,7 +83,7 @@ namespace Colnaught
         long Date = 0;
 
         double DayCounter = 0;
-        double DaySpeed = 60f / 10f;
+        double DaySpeed = 60f / 30f;
         
 
 

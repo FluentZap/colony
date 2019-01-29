@@ -18,7 +18,8 @@ namespace Colnaught
 
         public void Traffic_IO()
         {
-            //First Pass set's all the traffic second pass adds traffic to roads           
+            //First Pass set's all the traffic second pass adds traffic to roads
+            Projected_Traffic.Clear();
             foreach (var district in districts)
             {
                 for (int x = district.Area.Left; x < district.Area.Right; x++)
@@ -100,6 +101,15 @@ namespace Colnaught
                                 T.Traffic.OriginProducts += 512;                                 
                                 break;
                         }
+
+                        if (T.Constructing)
+                        {
+                            Projected_Traffic.AddTrafficFrom(T.Traffic);
+                            T.Traffic.Clear();
+                        }
+
+
+
                     }
 
 
