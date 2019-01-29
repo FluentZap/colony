@@ -467,13 +467,6 @@ namespace Colnaught
         }
 
 
-        enum ListOf_RCI
-        {
-            R,
-            C,
-            I
-        }
-
 
         public void Calculate_Growth()
         {
@@ -488,50 +481,15 @@ namespace Colnaught
                         foreach (var t in district.ValueList[v])
                         {
                             City_Tyle Tile = TileMap[t.X, t.Y];
-                            ListOf_RCI First = ListOf_RCI.R, Seccond = ListOf_RCI.C, Third = ListOf_RCI.I;
+                            
+                            if (ResidentialDemand > 0)
+                                if (Grow_Residential()) ResidentialDemand -= _e.Dictionaryof_BuildItems[TileMap[t.X, t.Y].Type].Traffic.OriginJobs;
 
+                            if (CommercialDemand > 0)
+                                if (Grow_Commercial()) CommercialDemand -= _e.Dictionaryof_BuildItems[TileMap[t.X, t.Y].Type].Traffic.OriginCommerce;
 
-                            if (ResidentialDemand >= CommercialDemand && ResidentialDemand >= IndustrialDemand)
-                            {
-                                First = ListOf_RCI.R;
-                                if (CommercialDemand >= IndustrialDemand)
-                                { Seccond = ListOf_RCI.C; Third = ListOf_RCI.I; }
-                                else
-                                { Seccond = ListOf_RCI.I; Third = ListOf_RCI.C; }
-                            }
-
-                            if (CommercialDemand >= ResidentialDemand && CommercialDemand >= IndustrialDemand)
-                            {
-                                First = ListOf_RCI.C;
-                                if (ResidentialDemand >= IndustrialDemand)
-                                { Seccond = ListOf_RCI.R; Third = ListOf_RCI.I; }
-                                else
-                                { Seccond = ListOf_RCI.I; Third = ListOf_RCI.R; }
-                            }
-
-                            if (IndustrialDemand >= ResidentialDemand && IndustrialDemand >= CommercialDemand)
-                            {
-                                First = ListOf_RCI.I;
-                                if (ResidentialDemand >= CommercialDemand)
-                                { Seccond = ListOf_RCI.R; Third = ListOf_RCI.C; }
-                                else
-                                { Seccond = ListOf_RCI.C; Third = ListOf_RCI.R; }
-                            }
-
-
-                            if (First == ListOf_RCI.R && !Built) Grow_Residential();
-                            if (First == ListOf_RCI.C && !Built) Grow_Commercial();
-                            if (First == ListOf_RCI.I && !Built) Grow_Industrial();
-
-                            if (Seccond == ListOf_RCI.R && !Built) Grow_Residential();
-                            if (Seccond == ListOf_RCI.C && !Built) Grow_Commercial();
-                            if (Seccond == ListOf_RCI.I && !Built) Grow_Industrial();
-
-                            if (Third == ListOf_RCI.R && !Built) Grow_Residential();
-                            if (Third == ListOf_RCI.C && !Built) Grow_Commercial();
-                            if (Third == ListOf_RCI.I && !Built) Grow_Industrial();
-
-
+                            if (IndustrialDemand > 0)
+                                if (Grow_Industrial()) IndustrialDemand -= _e.Dictionaryof_BuildItems[TileMap[t.X, t.Y].Type].Traffic.OriginProducts;
 
 
                             bool Grow_Residential()
@@ -675,14 +633,13 @@ namespace Colnaught
                                 return false;
 
                             }
-                            if (Built) break;
+                            
                         }
-                    }
-                    if (Built) break;
+                    }                    
                 }
             }
 
-
+            //Grow constructed buildings based on time.
             foreach (var district in districts)
                 for (int v = 255; v >= 0; v--)
                     if (district.ValueList[v].Count > 0)
@@ -695,7 +652,7 @@ namespace Colnaught
                                 if (tile.Constructing)
                                     tile.Growth++;
 
-                                if (tile.Growth == 10) { tile.SpriteIndex = 1; tile.Constructing = false; }
+                                if (tile.Growth == 4) { tile.SpriteIndex = 1; tile.Constructing = false; }
                                 if (tile.Growth == 20) { tile.SpriteIndex = 3; tile.Constructing = false; }
                                 if (tile.Growth == 30) { tile.SpriteIndex = 5; tile.Constructing = false; }
                                 if (tile.Growth == 40) { tile.SpriteIndex = 7; tile.Constructing = false; }
@@ -708,7 +665,7 @@ namespace Colnaught
                                 if (tile.Constructing)
                                     tile.Growth++;
 
-                                if (tile.Growth == 10) { tile.SpriteIndex = 1; tile.Constructing = false; }
+                                if (tile.Growth == 8) { tile.SpriteIndex = 1; tile.Constructing = false; }
                                 if (tile.Growth == 20) { tile.SpriteIndex = 3; tile.Constructing = false; }
                                 if (tile.Growth == 30) { tile.SpriteIndex = 5; tile.Constructing = false; }
                                 if (tile.Growth == 40) { tile.SpriteIndex = 7; tile.Constructing = false; }
@@ -721,7 +678,7 @@ namespace Colnaught
                                 if (tile.Constructing)
                                     tile.Growth++;
 
-                                if (tile.Growth == 10) { tile.SpriteIndex = 1; tile.Constructing = false; }
+                                if (tile.Growth == 12) { tile.SpriteIndex = 1; tile.Constructing = false; }
                                 if (tile.Growth == 20) { tile.SpriteIndex = 3; tile.Constructing = false; }
                                 if (tile.Growth == 30) { tile.SpriteIndex = 5; tile.Constructing = false; }
                                 if (tile.Growth == 40) { tile.SpriteIndex = 7; tile.Constructing = false; }
