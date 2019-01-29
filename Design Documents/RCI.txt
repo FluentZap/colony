@@ -66,7 +66,13 @@ I		0			20			0			0			10			0
 5					100									40
 
 
-
+Growth Rates
+Buildings
+Lv1	3 days
+Lv2	5 days
+Lv3	8
+Lv4	8
+Lv5 10
 
 
 5% unemployment rate

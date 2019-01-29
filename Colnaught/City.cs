@@ -556,7 +556,7 @@ namespace Colnaught
                                 if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_1 && v > 8 && ResidentialDemand > 8)
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Residential_2;
-                                    TileMap[t.X, t.Y].SpriteIndex = 1;
+                                    TileMap[t.X, t.Y].SpriteIndex = 2;
                                     Built = true;
                                     return true;
                                 }
@@ -564,7 +564,7 @@ namespace Colnaught
                                 if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_2 && v > 12 && ResidentialDemand > 8)
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Residential_3;
-                                    TileMap[t.X, t.Y].SpriteIndex = 2;
+                                    TileMap[t.X, t.Y].SpriteIndex = 4;
                                     Built = true;
                                     return true;
                                 }
@@ -572,7 +572,7 @@ namespace Colnaught
                                 if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_3 && v > 14 && ResidentialDemand > 16)
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Residential_4;
-                                    TileMap[t.X, t.Y].SpriteIndex = 3;
+                                    TileMap[t.X, t.Y].SpriteIndex = 6;
                                     Built = true;
                                     return true;
                                 }
@@ -580,7 +580,7 @@ namespace Colnaught
                                 if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_4 && v > 16)
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Residential_5;
-                                    TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    TileMap[t.X, t.Y].SpriteIndex = 8;
                                     Built = true;
                                     return true;
                                 }
@@ -682,21 +682,26 @@ namespace Colnaught
                     if (district.ValueList[v].Count > 0)                    
                         foreach (var t in district.ValueList[v])
                         {
-                            if (TileMap[t.X, t.Y].
-                            
+                            City_Tyle tile = TileMap[t.X, t.Y];
+                            if (_e.Dictionaryof_BuildItems[tile.Type].BuildingType == Listof_BuildTypes.Structure &&
+                                _e.Dictionaryof_BuildItems[tile.Type].ZoneType == Listof_ZoneType.Residential)
+                            {
+                                if (tile.SpriteIndex == 0 ||
+                                tile.SpriteIndex == 2 ||
+                                tile.SpriteIndex == 4 ||
+                                tile.SpriteIndex == 6 ||
+                                tile.SpriteIndex == 8)
+                                    tile.Growth++;
 
+                                if (tile.Growth == 10) tile.SpriteIndex = 1;
+                                if (tile.Growth == 20) tile.SpriteIndex = 3;
+                                if (tile.Growth == 30) tile.SpriteIndex = 5;
+                                if (tile.Growth == 40) tile.SpriteIndex = 7;
+                                if (tile.Growth == 50) tile.SpriteIndex = 9;
+                            }
+                            
                         }
         }
-
-
-
-
-
-
-
-
-
-
 
 
 
