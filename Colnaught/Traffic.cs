@@ -98,7 +98,7 @@ namespace Colnaught
                             case Listof_Structures.Industrial_5:
                                 T.Traffic.DestJobs += 512;
                                 T.Traffic.OriginProducts += 512;                                 
-                                break;                            
+                                break;
                         }
                     }
 

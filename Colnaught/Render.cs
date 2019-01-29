@@ -282,7 +282,8 @@ namespace Colnaught
                 spriteBatch.DrawString(basicfont, "Value: " + _city.TileMap[sel_pos.X, sel_pos.Y].LandValue.ToString(), new Vector2(0, 120), Color.White);
             }
 
-            spriteBatch.DrawString(basicfont, "Worker Supply: " + _city.WorkersSupply.ToString(), new Vector2(300, 0), Color.White);
+            if (_city.WorkersDemand > 0)
+                spriteBatch.DrawString(basicfont, "Worker Supply: " + _city.WorkersSupply.ToString() + "  Unemployemnt %" + ((double)(_city.WorkersSupply - _city.WorkersDemand) / _city.WorkersDemand), new Vector2(300, 0), Color.White);            
             spriteBatch.DrawString(basicfont, "Worker Demand: " + _city.WorkersDemand.ToString(), new Vector2(300, 20), Color.White);
             spriteBatch.DrawString(basicfont, "Worker Market: " + _city.WorkerMarket.ToString(), new Vector2(300, 40), Color.White);
 

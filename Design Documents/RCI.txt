@@ -54,6 +54,9 @@ I		0			20			0			0			10			0
 5					100									50
 
 
+8		32									16
+2					12			20									8
+1					20									10
 
 
 
@@ -62,6 +65,11 @@ I		0			20			0			0			10			0
 10					100			80									40
 5					100									40
 
+
+
+
+
+5% unemployment rate
 
 
 Excess Residential Gives

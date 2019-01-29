@@ -19,7 +19,7 @@ namespace Colnaught
         Residential_Structure,
         Commercial_Structure,
         Industrial_Structure,
-
+        Construction,
 
         Panel1 = 300,
         Button1
@@ -141,6 +141,9 @@ namespace Colnaught
             TileTexture[(int)Listof_Texture.Residential_Structure] = Content.Load<Texture2D>("Residential_1");
             TileTexture[(int)Listof_Texture.Commercial_Structure] = Content.Load<Texture2D>("Commercial_1");
             TileTexture[(int)Listof_Texture.Industrial_Structure] = Content.Load<Texture2D>("Industrial_1");
+
+
+            TileTexture[(int)Listof_Texture.Construction] = Content.Load<Texture2D>("Construction1");
 
             model = Content.Load<Model>("CityCenter");
             model2 = Content.Load<Model>("Tower1");
