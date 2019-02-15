@@ -77,7 +77,7 @@ namespace Colnaught
         Encyclopedia _e;
 
 
-        decimal Currency = 10000;
+        decimal Currency = 75000;
         decimal Income = 0;
 
         long Date = 0;

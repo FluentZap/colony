@@ -48,16 +48,18 @@ I		0			20			0			0			10			0
 
 
 
-
-40		160									80
-10					60			100									40
-5					100									50
-
-
-
 8		32									16
 2					12			16									8
 1					20									8
+
+
+800		3200								1600
+200					1200		1600								800
+100					2000								800
+
+
+
+1,600 for a district
 
 
 
@@ -87,3 +89,9 @@ Excess Commercial Gives
 
 Excess Industrial Gives
 	Products for factories
+	
+	
+	
+	
+	
+RCI starts at a base amount a positive increases the growth rate, a negative slows it.

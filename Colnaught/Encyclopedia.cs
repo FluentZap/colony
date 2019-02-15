@@ -46,7 +46,7 @@ namespace Colnaught
         public Encyclopedia()
         {
             Dictionaryof_BuildItems.Add(Listof_Structures.Grass, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Empty, Cost = 0, Texture = Listof_Texture.Grass });
-            Dictionaryof_BuildItems.Add(Listof_Structures.CityCenter, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.CityCenter, Cost = 1000, Texture = Listof_Texture.CityCenter });
+            Dictionaryof_BuildItems.Add(Listof_Structures.CityCenter, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.CityCenter, Cost = 50000, Texture = Listof_Texture.CityCenter });
             Dictionaryof_BuildItems.Add(Listof_Structures.ZoneResidential, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Zone, Cost = 2, Texture = Listof_Texture.Residential, ZoneType = Listof_ZoneType.Residential });
             Dictionaryof_BuildItems.Add(Listof_Structures.ZoneCommercial, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Zone, Cost = 2, Texture = Listof_Texture.Commercial, ZoneType = Listof_ZoneType.Commercial });
             Dictionaryof_BuildItems.Add(Listof_Structures.ZoneIndustrial, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Zone, Cost = 2, Texture = Listof_Texture.Industrial, ZoneType = Listof_ZoneType.Industrial });
@@ -74,6 +74,18 @@ namespace Colnaught
             //Traffic and Production
             Dictionaryof_BuildItems[Listof_Structures.Residential_1].Traffic.OriginJobs = 4;
             Dictionaryof_BuildItems[Listof_Structures.Residential_1].Traffic.DestCommerce = 2;
+
+            Dictionaryof_BuildItems[Listof_Structures.Residential_2].Traffic.OriginJobs = 8;
+            Dictionaryof_BuildItems[Listof_Structures.Residential_2].Traffic.DestCommerce = 4;
+
+            Dictionaryof_BuildItems[Listof_Structures.Residential_3].Traffic.OriginJobs = 16;
+            Dictionaryof_BuildItems[Listof_Structures.Residential_3].Traffic.DestCommerce = 8;
+
+            Dictionaryof_BuildItems[Listof_Structures.Residential_4].Traffic.OriginJobs = 32;
+            Dictionaryof_BuildItems[Listof_Structures.Residential_4].Traffic.DestCommerce = 16;
+
+            Dictionaryof_BuildItems[Listof_Structures.Residential_5].Traffic.OriginJobs = 64;
+            Dictionaryof_BuildItems[Listof_Structures.Residential_5].Traffic.DestCommerce = 32;
 
             Dictionaryof_BuildItems[Listof_Structures.Commercial_1].Traffic.DestJobs = 6;
             Dictionaryof_BuildItems[Listof_Structures.Commercial_1].Traffic.DestProducts = 5;
