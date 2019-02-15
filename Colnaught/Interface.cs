@@ -216,9 +216,7 @@ namespace Colnaught
 
                             MouseLeftClicked = false;
                             if (Keyboard.GetState().IsKeyUp(Keys.LeftShift) && Keyboard.GetState().IsKeyUp(Keys.RightShift))
-                                MouseMode = Listof_MouseMode.Default;
-
-                            Currency -= BuildCost;
+                                MouseMode = Listof_MouseMode.Default;                            
 
                             ClearBuild();
                         }
