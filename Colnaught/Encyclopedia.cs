@@ -71,6 +71,9 @@ namespace Colnaught
             Dictionaryof_BuildItems.Add(Listof_Structures.Industrial_4, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Industrial_Structure, ZoneType = Listof_ZoneType.Industrial });
             Dictionaryof_BuildItems.Add(Listof_Structures.Industrial_5, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Industrial_Structure, ZoneType = Listof_ZoneType.Industrial });
 
+            Dictionaryof_BuildItems.Add(Listof_Structures.PowerPlant1, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.PowerPlant1, ZoneType = Listof_ZoneType.Industrial });
+
+
             //Traffic and Production
             Dictionaryof_BuildItems[Listof_Structures.Residential_1].Traffic.OriginJobs = 4;
             Dictionaryof_BuildItems[Listof_Structures.Residential_1].Traffic.DestCommerce = 2;
