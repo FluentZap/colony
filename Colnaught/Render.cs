@@ -279,11 +279,25 @@ namespace Colnaught
                 spriteBatch.DrawString(basicfont, "Tile: X=" + sel_pos.X.ToString()
                                                  + " Y=" + sel_pos.Y.ToString(), new Vector2(0, 100), Color.White);
 
-                spriteBatch.DrawString(basicfont, "Value: " + _city.TileMap[sel_pos.X, sel_pos.Y].LandValue.ToString(), new Vector2(0, 120), Color.White);
+                spriteBatch.DrawString(basicfont, "Value: " + _city.TileMap[sel_pos.X, sel_pos.Y].LandValue.ToString(), new Vector2(0, 120), Color.White);                
             }
 
+            spriteBatch.DrawString(basicfont, "SS: " + Screen_Scroll.ToString(), new Vector2(0, 140), Color.White);
+
+            spriteBatch.DrawString(basicfont, "CenterTile: " + CenterTile.ToString(), new Vector2(0, 160), Color.White);
+
             if (_city.WorkersDemand > 0)
-                spriteBatch.DrawString(basicfont, "Worker Supply: " + _city.WorkersSupply.ToString() + "  Unemployemnt %" + ((double)(_city.WorkersSupply - _city.WorkersDemand) / _city.WorkersDemand) * 100, new Vector2(300, 0), Color.White);            
+            {
+                decimal unemp = Math.Round((decimal)(_city.WorkersSupply - _city.WorkersDemand) / _city.WorkersDemand, 2) * 100;
+                if (unemp > 0)
+                    spriteBatch.DrawString(basicfont, "Unemployemnt %" + unemp.ToString(), new Vector2(700, 0), Color.Red);
+                else
+                    spriteBatch.DrawString(basicfont, "Available Jobs %" + Math.Abs(unemp).ToString(), new Vector2(700, 0), Color.Green);
+            }
+
+
+
+            spriteBatch.DrawString(basicfont, "Worker Supply: " + _city.WorkersSupply.ToString(), new Vector2(300, 0), Color.White);
             spriteBatch.DrawString(basicfont, "Worker Demand: " + _city.WorkersDemand.ToString(), new Vector2(300, 20), Color.White);
             spriteBatch.DrawString(basicfont, "Worker Market: " + _city.WorkerMarket.ToString(), new Vector2(300, 40), Color.White);
 
@@ -297,7 +311,7 @@ namespace Colnaught
 
             spriteBatch.DrawString(basicfont, "Excess Products: " + _city.ExcessProducts.ToString(), new Vector2(300, 180), Color.White);
             spriteBatch.DrawString(basicfont, "Excess Commerce: " + _city.ExcessCommerce.ToString(), new Vector2(300, 200), Color.White);
-
+            
 
 
             foreach (var district in _city.districts)

@@ -51,10 +51,13 @@ namespace Colnaught
 
         Vector3 Camera = new Vector3(0, 0, 0);
 
-        float zoom = 0.5f;
+        float zoom = 1.0f;
+        bool Zoomed = false;
 
         Point MouseDragStart;
         bool MouseDraging;
+
+        int OldMouseScrollWheelValue = Mouse.GetState().ScrollWheelValue;
 
         Point MouseDragScreenScrollStart;
         Listof_MouseMode MouseMode = Listof_MouseMode.Default;
@@ -69,7 +72,7 @@ namespace Colnaught
 
         int BuildCost = 0;
 
-        Point Screen_Scroll;
+        Point Screen_Scroll = new Point(0, 0);
         public Point Screen_Size;
 
         Interface _interface;
@@ -84,7 +87,10 @@ namespace Colnaught
 
         double DayCounter = 0;
         double DaySpeed = 60f / 30f;
+
+        Vector2 CenterTile;
         
+
 
 
         public Game1()
@@ -181,20 +187,48 @@ namespace Colnaught
                 Exit();
 
             if (Keyboard.GetState().IsKeyDown(Keys.Left))
-                Camera.X += 1000f * delta;
+                Screen_Scroll.X -= (int)(128);
             if (Keyboard.GetState().IsKeyDown(Keys.Right))
-                Camera.X -= 1000f * delta;
+                Screen_Scroll.X += (int)(128);
             if (Keyboard.GetState().IsKeyDown(Keys.Up))
-                Camera.Y += 1000f * delta;
+                Screen_Scroll.Y -= (int)(256);
             if (Keyboard.GetState().IsKeyDown(Keys.Down))
-                Camera.Y -= 1000f * delta;
+                Screen_Scroll.Y += (int)(256);
 
-            if (Keyboard.GetState().IsKeyDown(Keys.OemMinus))
-                zoom -= 0.01f;
-            if (Keyboard.GetState().IsKeyDown(Keys.OemPlus))
-                zoom += 0.01f;
 
             
+            //CenterTile.Y = ((Screen_Scroll.Y + Screen_Size.Y / 2) / zoom - 128) / 64f;
+            //CenterTile.X = ((Screen_Scroll.X + Screen_Size.X / 2) / zoom - 128) / 64f;
+
+            CenterTile.Y = ((Mouse.GetState().Position.Y + Screen_Scroll.Y) / zoom - 128) / 64f;            
+            CenterTile.X = ((Mouse.GetState().Position.X + Screen_Scroll.X) / zoom - 128) / 64f;            
+
+            Zoomed = false;
+            if (Zoomed == false)
+            {
+                if (Keyboard.GetState().IsKeyDown(Keys.OemMinus) || Mouse.GetState().ScrollWheelValue < OldMouseScrollWheelValue)
+                {
+                    if (zoom > 0.25f)
+                    {
+                        zoom -= 0.25f;
+                        Screen_Scroll.Y -= (int)(32 + CenterTile.Y * 16);
+                        Screen_Scroll.X -= (int)(32 + CenterTile.X * 16);
+                        Zoomed = true;                        
+                    }
+                }                    
+                if (Keyboard.GetState().IsKeyDown(Keys.OemPlus) || Mouse.GetState().ScrollWheelValue > OldMouseScrollWheelValue)
+                {                    
+                    zoom += 0.25f;                    
+                    Screen_Scroll.Y += (int)(32 + CenterTile.Y * 16);
+                    Screen_Scroll.X += (int)(32 + CenterTile.X * 16);
+                    Zoomed = true;                    
+                }                    
+            }
+
+            OldMouseScrollWheelValue = Mouse.GetState().ScrollWheelValue;
+            if (Keyboard.GetState().IsKeyUp(Keys.OemMinus) && Keyboard.GetState().IsKeyUp(Keys.OemPlus))
+                Zoomed = false;
+
 
             UI_MouseDrag();
             Update_Interface();            
