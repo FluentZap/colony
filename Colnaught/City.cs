@@ -46,7 +46,8 @@ namespace Colnaught
         Industrial_2,
         Industrial_3,
         Industrial_4,
-        Industrial_5
+        Industrial_5,
+        PowerPlant1
     }
 
 

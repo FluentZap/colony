@@ -20,6 +20,7 @@ namespace Colnaught
         Commercial_Structure,
         Industrial_Structure,
         Construction,
+        PowerPlant1,
 
         Panel1 = 300,
         Button1
@@ -151,6 +152,9 @@ namespace Colnaught
 
             TileTexture[(int)Listof_Texture.Construction] = Content.Load<Texture2D>("Construction1");
 
+            TileTexture[(int)Listof_Texture.PowerPlant1] = Content.Load<Texture2D>("PowerPlant_2");
+
+
             model = Content.Load<Model>("CityCenter");
             model2 = Content.Load<Model>("Tower1");
             basicfont = Content.Load<SpriteFont>("romulus");
@@ -158,7 +162,17 @@ namespace Colnaught
             _interface = new Interface(Screen_Size);
             _e = new Encyclopedia();
             _city = new City(new Point(200, 200), _e);
-            
+
+            _city.TileMap[10, 10].Type = Listof_Structures.PowerPlant1;
+            _city.TileMap[11, 10].Type = Listof_Structures.PowerPlant1;
+            _city.TileMap[10, 11].Type = Listof_Structures.PowerPlant1;
+            _city.TileMap[11, 11].Type = Listof_Structures.PowerPlant1;
+
+            _city.TileMap[10, 10].SpriteIndex = 1;            
+            _city.TileMap[11, 10].SpriteIndex = 3;
+            _city.TileMap[10, 11].SpriteIndex = 0;
+            _city.TileMap[11, 11].SpriteIndex = 2;
+
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -255,16 +269,7 @@ namespace Colnaught
 
 
             base.Update(gameTime);
-        }
-        
-
-        void SetRoadSprites(HashSet<Point> RoadList)
-        {
-            bool L, R, T, B;
-            HashSet<Point> Crawl = new HashSet<Point>();           
-
-        }
-        
+        }                
         
     }
 }
