@@ -5,23 +5,23 @@ using System.Collections.Generic;
 namespace Colnaught
 {
 
-    enum Listof_RoadSprites : byte
+    enum Listof_RoadSprites : int
     {
-        vertical,
-        horizontal,
-        TL,
-        TR,
-        BL,
-        BR,
-        SplitL,
-        SplitR,
-        SplitT,
-        SplitB,
-        cross,
-        EndT,
-        EndB,
-        EndL,
-        EndR
+        TopBottomHorizontal,
+        LeftRightHorizontal,        
+        ThreeWayTop,
+        ThreeWayRight,
+        ThreeWayBottom,
+        ThreeWayLeft,
+        FourWay,
+        TopEnd,
+        BottomEnd,
+        RightEnd,
+        LeftEnd,
+        CornerTopLeft,
+        CornerTopRight,
+        CornerBottomLeft,
+        CornerBottomRight
     }
 
     enum Listof_Structures
@@ -322,10 +322,14 @@ namespace Colnaught
         public City_Tyle[,] TileMap;
         public HashSet<District> districts;
         public double ResidentialDemand = 0, CommercialDemand = 0, IndustrialDemand = 0;
+
+        public double ResidentialDemandCap = 0, CommercialDemandCap = 0, IndustrialDemandCap = 0;
+
         public Tile_Traffic Projected_Traffic = new Tile_Traffic();
 
         public int WorkersSupply = 0, ProductsSupply = 0, CommerceSupply = 0;
-        public int WorkersDemand = 0, ProductsDemand = 0, CommerceDemand = 0;
+        public int WorkersDemand = 0, ProductsDemand = 0, CommerceDemand = 0;        
+
         public int ExcessProducts = 0;
         public int ExcessCommerce = 0;
 
@@ -388,9 +392,13 @@ namespace Colnaught
 
         public void Calculate_JPC()
         {
-            ResidentialDemand = 50;
-            CommercialDemand = 50;
-            IndustrialDemand = 100;
+            //ResidentialDemand = 0;
+            //CommercialDemand = 0;
+            //IndustrialDemand = 0;
+
+            ResidentialDemandCap = 100;
+            CommercialDemandCap = 100;
+            IndustrialDemandCap = 100;
 
             foreach (var district in districts)
             {
@@ -469,9 +477,18 @@ namespace Colnaught
 
                 //ResidentialDemand = WorkersDemand - (WorkersSupply * CommerceBoost);
 
-                ResidentialDemand += (Traff.DestJobs * 1.15) - Traff.OriginJobs - Projected_Traffic.OriginJobs;
-                CommercialDemand += (Traff.DestCommerce * 1.10) - Traff.OriginCommerce - Projected_Traffic.OriginCommerce;
-                IndustrialDemand += (Traff.DestProducts * 1.10) - Traff.OriginProducts - Projected_Traffic.OriginProducts;
+                //ResidentialDemand += (Traff.DestJobs * 1.15) - Traff.OriginJobs - Projected_Traffic.OriginJobs;
+                //CommercialDemand += (Traff.DestCommerce * 1.10) - Traff.OriginCommerce - Projected_Traffic.OriginCommerce;
+                //IndustrialDemand += (Traff.DestProducts * 1.10) - Traff.OriginProducts - Projected_Traffic.OriginProducts;
+
+
+                ResidentialDemand += 20;
+                CommercialDemand += 20;
+                IndustrialDemand += 20;
+
+                if (ResidentialDemand > ResidentialDemandCap) ResidentialDemand = ResidentialDemandCap;
+                if (CommercialDemand > CommercialDemandCap) CommercialDemand = CommercialDemandCap;
+                if (IndustrialDemand > IndustrialDemandCap) IndustrialDemand = IndustrialDemandCap;
 
             }
         }

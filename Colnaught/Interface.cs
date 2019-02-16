@@ -216,7 +216,7 @@ namespace Colnaught
 
                             MouseLeftClicked = false;
                             if (Keyboard.GetState().IsKeyUp(Keys.LeftShift) && Keyboard.GetState().IsKeyUp(Keys.RightShift))
-                                MouseMode = Listof_MouseMode.Default;                            
+                                MouseMode = Listof_MouseMode.Default;
 
                             ClearBuild();
                         }
@@ -330,6 +330,14 @@ namespace Colnaught
                                 ReconnectTile(new Point(x, P3.Y));
                             for (int y = P1.Y; y <= P2.Y; y++)
                                 ReconnectTile(new Point(P3.X, y));
+
+
+                            //Set Road Sprites
+                            for (int x = P1.X; x <= P2.X - 1; x++)
+                                SetRoadTileSprite(new Point(x, P3.Y));
+                            for (int y = P1.Y; y <= P2.Y; y++)
+                                SetRoadTileSprite(new Point(P3.X, y));
+
 
                             Currency -= BuildCost;
 
@@ -495,6 +503,58 @@ namespace Colnaught
                 Buildable = false;
 
         }
+
+
+
+
+        void SetRoadTileSprite(Point P)
+        {
+            //Check built tile and surrounding tiles
+            Rectangle rect = new Rectangle(P.X, P.Y, 1, 1);
+            rect.Inflate(1, 1);
+
+            for (int x = rect.Left; x <= rect.Right; x++)
+                for (int y = rect.Top; y <= rect.Bottom; y++)
+                    if (_city.CityArea.Contains(x, y) && _e.Dictionaryof_BuildItems[_city.TileMap[x, y].Type].BuildingType == Listof_BuildTypes.Road)
+                    {
+                        bool left = false, right = false, top = false, bottom = false;
+                        if (_city.CityArea.Contains(x - 1, y) && _e.Dictionaryof_BuildItems[_city.TileMap[x - 1, y].Type].BuildingType == Listof_BuildTypes.Road) left = true;
+                        if (_city.CityArea.Contains(x + 1, y) && _e.Dictionaryof_BuildItems[_city.TileMap[x + 1, y].Type].BuildingType == Listof_BuildTypes.Road) right = true;
+                        if (_city.CityArea.Contains(x, y - 1) && _e.Dictionaryof_BuildItems[_city.TileMap[x, y - 1].Type].BuildingType == Listof_BuildTypes.Road) top = true;
+                        if (_city.CityArea.Contains(x, y + 1) && _e.Dictionaryof_BuildItems[_city.TileMap[x, y + 1].Type].BuildingType == Listof_BuildTypes.Road) bottom = true;
+
+
+                        if (left && right && !top && !bottom) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.LeftRightHorizontal;
+                        if (top && bottom && !left && !right) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.TopBottomHorizontal;
+
+                        if (top && left && right) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.ThreeWayRight;
+                        if (bottom && left && right) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.ThreeWayLeft;
+                        if (top && bottom && left) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.ThreeWayTop;
+                        if (top && bottom && right) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.ThreeWayBottom;
+
+                        if (top && !bottom && left && !right) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.CornerTopRight;
+                        if (!top && bottom && !left && right) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.CornerBottomLeft;
+
+
+                        if (!top && bottom && left && !right) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.CornerTopLeft;
+                        if (top && !bottom && !left && right) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.CornerBottomRight;
+                        
+
+                        //if (top && !bottom && left && !right) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.CornerBottomLeft;
+
+
+                        if (top && bottom && left && right) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.FourWay;
+
+                        if (top && !bottom && !left && !right) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.LeftEnd;
+                        if (!top && bottom && !left && !right) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.RightEnd;
+                        if (!top && !bottom && left && !right) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.BottomEnd;
+                        if (!top && !bottom && !left && right) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.TopEnd;
+
+                    }
+
+        }
+
+
 
 
 
