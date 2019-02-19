@@ -82,8 +82,20 @@ namespace Colnaught
                             //Structures
                             if (_e.Dictionaryof_BuildItems[Building].BuildingType == Listof_BuildTypes.Structure)
                             {
-                                if (x == sel_pos.X && y == sel_pos.Y)
-                                    spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.CornflowerBlue, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
+
+                                Typeof_BuildItems BuildData = _e.Dictionaryof_BuildItems[Building];                                
+                                Rectangle BuildR = new Rectangle(sel_pos+ new Point(1, 1) - BuildData.Size, BuildData.Size);
+
+                                if (BuildR.Contains(new Point(x, y)))
+                                {
+                                    int sprite = sel_pos.X - x + ((sel_pos.Y - y) * BuildData.Size.X);
+
+                                    spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(sprite * 128, 0, 128, 256), Color.CornflowerBlue, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
+                                    DrawMapTile = false;
+                                }
+
+                                //if (x == sel_pos.X && y == sel_pos.Y)
+                                  //  spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.CornflowerBlue, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
                             }
 
                             //Zones
@@ -91,10 +103,10 @@ namespace Colnaught
                             {
                                 if (x == sel_pos.X && y == sel_pos.Y)
                                 {
-                                    if (_city.TileMap[x, y].Buildable)                                    
-                                        spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.White, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);                                                                            
-                                    else                                    
-                                        spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.CornflowerBlue, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);                                                                            
+                                    if (_city.TileMap[x, y].Buildable)
+                                        spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.White, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
+                                    else
+                                        spriteBatch.Draw(TileTexture[(int)_e.Dictionaryof_BuildItems[Building].Texture], pos, new Rectangle(0, 0, 128, 256), Color.CornflowerBlue, 0f, new Vector2(), Tile_Size, SpriteEffects.None, 1);
                                     DrawMapTile = false;
 
                                 }
@@ -228,6 +240,31 @@ namespace Colnaught
                 if (item.Value.Type == Listof_ButtonType.Button) spriteBatch.Draw(TileTexture[(int)Listof_Texture.Button1], item.Value.Location, item.Value.color);
             }
 
+
+            int buttonID = 0;
+            foreach (var tech in _t.BuildingTech)
+            {
+                if (tech.Value.Category == BuildCategorySelected)
+                {
+                    if (buttonID >= BuildButtonScroll)
+                    {                    
+                    var item = _interface.Dictionaryof_CityScreenButtons[(Listof_ViewInterfaceButtons)0 + buttonID - BuildButtonScroll];
+                    var button = item.Location;
+                    button.Inflate(-10, -10);
+                    spriteBatch.Draw(TileTexture[(int)Listof_Texture.ButtonIcons], button, new Rectangle((int)tech.Value.BuildIcon * 64, 0, 64, 64), item.color);
+                    }
+                    buttonID++;
+                }
+                
+                if (buttonID - BuildButtonScroll >= 4)
+                    break;
+            }
+
+
+
+
+
+
             //RCI
             Vector2 RCI = new Vector2(Screen_Size.X - 400, Screen_Size.Y - 200);
 
@@ -279,7 +316,7 @@ namespace Colnaught
                 spriteBatch.DrawString(basicfont, "Tile: X=" + sel_pos.X.ToString()
                                                  + " Y=" + sel_pos.Y.ToString(), new Vector2(0, 100), Color.White);
 
-                spriteBatch.DrawString(basicfont, "Value: " + _city.TileMap[sel_pos.X, sel_pos.Y].LandValue.ToString(), new Vector2(0, 120), Color.White);                
+                spriteBatch.DrawString(basicfont, "Value: " + _city.TileMap[sel_pos.X, sel_pos.Y].LandValue.ToString(), new Vector2(0, 120), Color.White);
             }
 
             spriteBatch.DrawString(basicfont, "SS: " + Screen_Scroll.ToString(), new Vector2(0, 140), Color.White);
@@ -311,11 +348,11 @@ namespace Colnaught
 
             spriteBatch.DrawString(basicfont, "Excess Products: " + _city.ExcessProducts.ToString(), new Vector2(300, 180), Color.White);
             spriteBatch.DrawString(basicfont, "Excess Commerce: " + _city.ExcessCommerce.ToString(), new Vector2(300, 200), Color.White);
-            
+
 
 
             foreach (var district in _city.districts)
-            {               
+            {
                 //spriteBatch.DrawString(basicfont, "Workers: " + district.Workers.ToString(), new Vector2(300, 0), Color.White);
                 //spriteBatch.DrawString(basicfont, "Jobs: " + district.Jobs[0].ToString(), new Vector2(300, 20), Color.White);
                 //spriteBatch.DrawString(basicfont, "JobMarket: " + district.JobMarket.ToString(), new Vector2(300, 40), Color.White);

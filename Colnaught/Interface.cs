@@ -9,21 +9,59 @@ using System.Threading.Tasks;
 namespace Colnaught
 {
 
-    enum Listof_ViewInterfaceButtons
+
+
+    public enum Listof_BuildTabCategories
     {
-        BuildPanel,
+        Zones,
+        Roads,
+        Power
+    }
+
+
+    public enum Listof_BuildItems
+    {
+        Residential,
+        Commercial,
+        Industrial
+    }
+
+    public enum Listof_BuildTabRoads
+    {
+        DirtRoad
+    }
+
+    public enum Listof_BuildTabPower
+    {
+        PowerPlant
+    }
+
+
+    enum Listof_ViewInterfaceButtons: int
+    {        
         BuildButton1,
         BuildButton2,
         BuildButton3,
         BuildButton4,
-        BuildButton5
+        BuildButton5,
+        BuildPanel,
+        BuildCategory1,
+        BuildCategory2,
+        BuildCategory3,
+        BuildCategory4,
+        BuildCategory5,
+        BuildCategory6
     }
 
     enum Listof_ButtonType
     {
         Panel,
         Button
-    }
+    }    
+
+
+
+
 
 
 
@@ -32,6 +70,7 @@ namespace Colnaught
     {
         public string Label;
         public Listof_ButtonType Type;
+        public int SpriteIndex = 0;
         public Rectangle Location;
         public Color color = Color.White;
         /*
@@ -42,7 +81,6 @@ namespace Colnaught
             this.Location = Location;
         }
         */
-
     }
 
 
@@ -54,13 +92,21 @@ namespace Colnaught
         {
             int w = Screen_Size.X;
             int h = Screen_Size.Y;
-            //Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildPanel, new Interface_Item() { Location = new Rectangle(0, h - 200, w, 200) });
+            Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildPanel, new Interface_Item() { Location = new Rectangle(0, h - 200, w, 200) });
 
             Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildButton1, new Interface_Item() { Location = new Rectangle(256 + 128 * 0, h - 200, 128, 128), Type = Listof_ButtonType.Button });
             Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildButton2, new Interface_Item() { Location = new Rectangle(256 + 128 * 1, h - 200, 128, 128), Type = Listof_ButtonType.Button });
             Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildButton3, new Interface_Item() { Location = new Rectangle(256 + 128 * 2, h - 200, 128, 128), Type = Listof_ButtonType.Button });
             Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildButton4, new Interface_Item() { Location = new Rectangle(256 + 128 * 3, h - 200, 128, 128), Type = Listof_ButtonType.Button });
             Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildButton5, new Interface_Item() { Location = new Rectangle(256 + 128 * 4, h - 200, 128, 128), Type = Listof_ButtonType.Button });
+
+            Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildCategory1, new Interface_Item() { Location = new Rectangle(256 + 128 * 0, h - 232, 128, 32), Type = Listof_ButtonType.Button });
+            Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildCategory2, new Interface_Item() { Location = new Rectangle(256 + 128 * 1, h - 232, 128, 32), Type = Listof_ButtonType.Button });
+            Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildCategory3, new Interface_Item() { Location = new Rectangle(256 + 128 * 2, h - 232, 128, 32), Type = Listof_ButtonType.Button });
+            Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildCategory4, new Interface_Item() { Location = new Rectangle(256 + 128 * 3, h - 232, 128, 32), Type = Listof_ButtonType.Button });
+            Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildCategory5, new Interface_Item() { Location = new Rectangle(256 + 128 * 4, h - 232, 128, 32), Type = Listof_ButtonType.Button });
+            Dictionaryof_CityScreenButtons.Add(Listof_ViewInterfaceButtons.BuildCategory6, new Interface_Item() { Location = new Rectangle(256 + 128 * 5, h - 232, 128, 32), Type = Listof_ButtonType.Button });
+
         }
 
 
@@ -78,10 +124,8 @@ namespace Colnaught
 
     public partial class Game1
     {
-
-
-
-
+        public Listof_BuildTabCategories BuildCategorySelected;
+        public int BuildButtonScroll;
 
 
 
@@ -103,40 +147,37 @@ namespace Colnaught
                     onPanel = true;
                     if (Mouse.GetState().LeftButton == ButtonState.Pressed)
                     {
-                        if (item.Key == Listof_ViewInterfaceButtons.BuildButton1)
+
+                        //Build Catagory Building
+                        int buttonID = 0;
+                        foreach (var tech in _t.BuildingTech)
                         {
-                            ClearBuild();
-                            MouseMode = Listof_MouseMode.Building;
-                            Building = Listof_Structures.CityCenter;
+                            if (tech.Value.Category == BuildCategorySelected)
+                            {
+                                if (buttonID >= BuildButtonScroll)
+                                {
+                                    int id = buttonID - BuildButtonScroll;
+                                    if (id >= 0 && id <= 4 && id == (int)item.Key)
+                                    {
+                                        ClearBuild();
+                                        MouseMode = Listof_MouseMode.Building;
+                                        Building = tech.Value.BuildItem;
+                                    }
+                                }
+                                buttonID++;
+                            }
+
+                            if (buttonID - BuildButtonScroll >= 4)
+                                break;
                         }
 
-                        if (item.Key == Listof_ViewInterfaceButtons.BuildButton2)
-                        {
-                            ClearBuild();
-                            MouseMode = Listof_MouseMode.Building;
-                            Building = Listof_Structures.ZoneResidential;
-                        }
 
-                        if (item.Key == Listof_ViewInterfaceButtons.BuildButton3)
-                        {
-                            ClearBuild();
-                            MouseMode = Listof_MouseMode.Building;
-                            Building = Listof_Structures.ZoneCommercial;
-                        }
 
-                        if (item.Key == Listof_ViewInterfaceButtons.BuildButton4)
-                        {
-                            ClearBuild();
-                            MouseMode = Listof_MouseMode.Building;
-                            Building = Listof_Structures.ZoneIndustrial;
-                        }
+                        if (item.Key >= Listof_ViewInterfaceButtons.BuildCategory1) BuildCategorySelected = Listof_BuildTabCategories.Zones;
+                        if (item.Key >= Listof_ViewInterfaceButtons.BuildCategory2) BuildCategorySelected = Listof_BuildTabCategories.Roads;
+                        if (item.Key >= Listof_ViewInterfaceButtons.BuildCategory3) BuildCategorySelected = Listof_BuildTabCategories.Power;
 
-                        if (item.Key == Listof_ViewInterfaceButtons.BuildButton5)
-                        {
-                            ClearBuild();
-                            MouseMode = Listof_MouseMode.Building;
-                            Building = Listof_Structures.RoadDirt;
-                        }
+
                     }
 
 
@@ -185,18 +226,31 @@ namespace Colnaught
                 else
                     MouseLeftClicked = false;
 
-
+                Typeof_BuildItems BuildData = _e.Dictionaryof_BuildItems[Building];
 
                 //Placed Buildings
-                if (Build == true && _e.Dictionaryof_BuildItems[Building].BuildingType == Listof_BuildTypes.Structure)
+                if (Build == true && BuildData.BuildingType == Listof_BuildTypes.Structure)
                 {
-                    if (InsideDistrict(BuildRect))
+                    if (Buildable)
                     {
-                        _city.TileMap[sel_pos.X, sel_pos.Y].Type = Building;
+
+                        if (BuildData.Size != new Point(1, 1))
+                        {
+                            for (int y = 0; y < BuildData.Size.Y; y++)
+                                for (int x = 0; x < BuildData.Size.X; x++)                                
+                                {
+                                    _city.TileMap[sel_pos.X - x, sel_pos.Y - y].Type = Building;
+                                    _city.TileMap[sel_pos.X - x, sel_pos.Y - y].SpriteIndex = x + (y * BuildData.Size.X);
+                                }
+                        }
+                        Currency -= BuildCost;
+
                         MouseLeftClicked = false;
                         if (Keyboard.GetState().IsKeyUp(Keys.LeftShift) && Keyboard.GetState().IsKeyUp(Keys.RightShift))
                             MouseMode = Listof_MouseMode.Default;
-                    }
+
+                        ClearBuild();
+                    }                                           
                 }
 
                 //City Center
@@ -494,6 +548,13 @@ namespace Colnaught
 
                 BuildCost = _e.Dictionaryof_BuildItems[Building].Cost;
 
+            }
+
+
+
+            if (B == Listof_BuildTypes.Structure)
+            {
+                BuildCost = _e.Dictionaryof_BuildItems[Building].Cost;
             }
 
 
