@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Colnaught
 {
+
 
     enum Listof_BuildTypes
     {
@@ -15,6 +17,7 @@ namespace Colnaught
         Structure,
         CityCenter
     }
+
 
     enum Listof_ZoneType
     {
@@ -28,6 +31,7 @@ namespace Colnaught
     class Typeof_BuildItems
     {
         public int Cost;
+        public Point Size = new Point(1, 1);
         public Listof_BuildTypes BuildingType;
         public Listof_Texture Texture;
         public Listof_ZoneType ZoneType = Listof_ZoneType.None;
@@ -71,7 +75,8 @@ namespace Colnaught
             Dictionaryof_BuildItems.Add(Listof_Structures.Industrial_4, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Industrial_Structure, ZoneType = Listof_ZoneType.Industrial });
             Dictionaryof_BuildItems.Add(Listof_Structures.Industrial_5, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Industrial_Structure, ZoneType = Listof_ZoneType.Industrial });
 
-            Dictionaryof_BuildItems.Add(Listof_Structures.PowerPlant1, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.PowerPlant1, ZoneType = Listof_ZoneType.Industrial });
+
+            Dictionaryof_BuildItems.Add(Listof_Structures.PowerPlant1, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Cost = 2500, Texture = Listof_Texture.PowerPlant1, Size = new Point(2, 2) });
 
 
             //Traffic and Production

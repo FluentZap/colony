@@ -22,6 +22,7 @@ namespace Colnaught
         Construction,
         PowerPlant1,
 
+        ButtonIcons,
         Panel1 = 300,
         Button1
     };
@@ -79,6 +80,7 @@ namespace Colnaught
         Interface _interface;
         City _city;
         Encyclopedia _e;
+        Tech _t;
 
 
         decimal Currency = 75000;
@@ -154,6 +156,9 @@ namespace Colnaught
 
             TileTexture[(int)Listof_Texture.PowerPlant1] = Content.Load<Texture2D>("PowerPlant_2");
 
+            TileTexture[(int)Listof_Texture.ButtonIcons] = Content.Load<Texture2D>("BuildingIcons");
+            
+
 
             model = Content.Load<Model>("CityCenter");
             model2 = Content.Load<Model>("Tower1");
@@ -162,6 +167,7 @@ namespace Colnaught
             _interface = new Interface(Screen_Size);
             _e = new Encyclopedia();
             _city = new City(new Point(200, 200), _e);
+            _t = new Tech();
 
             _city.TileMap[10, 10].Type = Listof_Structures.PowerPlant1;
             _city.TileMap[11, 10].Type = Listof_Structures.PowerPlant1;
@@ -175,6 +181,15 @@ namespace Colnaught
 
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+
+            for (int x = 0; x < Enum.GetNames(typeof(Listof_TechItems)).Length; x++)
+                UnlockedTech.Add((Listof_TechItems)x);
+
+            for (int x = 0; x < Enum.GetNames(typeof(Listof_BuildTabCategories)).Length; x++)
+                BuildTech.Add((Listof_BuildTabCategories)x, new HashSet<int>());
+
+
 
             // TODO: use this.Content to load your game content here
         }
