@@ -168,18 +168,7 @@ namespace Colnaught
             _e = new Encyclopedia();
             _city = new City(new Point(200, 200), _e);
             _t = new Tech();
-
-            _city.TileMap[10, 10].Type = Listof_Structures.PowerPlant1;
-            _city.TileMap[11, 10].Type = Listof_Structures.PowerPlant1;
-            _city.TileMap[10, 11].Type = Listof_Structures.PowerPlant1;
-            _city.TileMap[11, 11].Type = Listof_Structures.PowerPlant1;
-
-            _city.TileMap[10, 10].SpriteIndex = 1;            
-            _city.TileMap[11, 10].SpriteIndex = 3;
-            _city.TileMap[10, 11].SpriteIndex = 0;
-            _city.TileMap[11, 11].SpriteIndex = 2;
-
-
+            
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
 
@@ -272,7 +261,7 @@ namespace Colnaught
                 
                 _city.Calculate_Traffic();
                 _city.Calculate_JPC();
-
+                _city.Calculate_Power();
 
                 Income = _city.Calculate_Taxes();
                 Currency += Income;

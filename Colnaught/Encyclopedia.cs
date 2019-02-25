@@ -36,6 +36,9 @@ namespace Colnaught
         public Listof_Texture Texture;
         public Listof_ZoneType ZoneType = Listof_ZoneType.None;
         public Tile_Traffic Traffic = new Tile_Traffic();
+        public int PowerSupply;
+        public int PowerDrain;
+
 
     }
 
@@ -57,29 +60,33 @@ namespace Colnaught
 
             Dictionaryof_BuildItems.Add(Listof_Structures.RoadDirt, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Road, Cost = 50, Texture = Listof_Texture.Road });
 
-            Dictionaryof_BuildItems.Add(Listof_Structures.Residential_1, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Residential_Structure, ZoneType = Listof_ZoneType.Residential });            
-            Dictionaryof_BuildItems.Add(Listof_Structures.Residential_2, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Residential_Structure, ZoneType = Listof_ZoneType.Residential });
-            Dictionaryof_BuildItems.Add(Listof_Structures.Residential_3, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Residential_Structure, ZoneType = Listof_ZoneType.Residential });
-            Dictionaryof_BuildItems.Add(Listof_Structures.Residential_4, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Residential_Structure, ZoneType = Listof_ZoneType.Residential });
-            Dictionaryof_BuildItems.Add(Listof_Structures.Residential_5, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Residential_Structure, ZoneType = Listof_ZoneType.Residential });
+            Dictionaryof_BuildItems.Add(Listof_Structures.Residential_1, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Residential_Structure, ZoneType = Listof_ZoneType.Residential, PowerDrain = 1 });            
+            Dictionaryof_BuildItems.Add(Listof_Structures.Residential_2, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Residential_Structure, ZoneType = Listof_ZoneType.Residential, PowerDrain = 1 });
+            Dictionaryof_BuildItems.Add(Listof_Structures.Residential_3, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Residential_Structure, ZoneType = Listof_ZoneType.Residential, PowerDrain = 1 });
+            Dictionaryof_BuildItems.Add(Listof_Structures.Residential_4, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Residential_Structure, ZoneType = Listof_ZoneType.Residential, PowerDrain = 1 });
+            Dictionaryof_BuildItems.Add(Listof_Structures.Residential_5, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Residential_Structure, ZoneType = Listof_ZoneType.Residential, PowerDrain = 1 });
 
-            Dictionaryof_BuildItems.Add(Listof_Structures.Commercial_1, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Commercial_Structure, ZoneType = Listof_ZoneType.Commercial });
-            Dictionaryof_BuildItems.Add(Listof_Structures.Commercial_2, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Commercial_Structure, ZoneType = Listof_ZoneType.Commercial });
-            Dictionaryof_BuildItems.Add(Listof_Structures.Commercial_3, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Commercial_Structure, ZoneType = Listof_ZoneType.Commercial });
-            Dictionaryof_BuildItems.Add(Listof_Structures.Commercial_4, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Commercial_Structure, ZoneType = Listof_ZoneType.Commercial });
-            Dictionaryof_BuildItems.Add(Listof_Structures.Commercial_5, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Commercial_Structure, ZoneType = Listof_ZoneType.Commercial });
+            Dictionaryof_BuildItems.Add(Listof_Structures.Commercial_1, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Commercial_Structure, ZoneType = Listof_ZoneType.Commercial, PowerDrain = 2 });
+            Dictionaryof_BuildItems.Add(Listof_Structures.Commercial_2, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Commercial_Structure, ZoneType = Listof_ZoneType.Commercial, PowerDrain = 1 });
+            Dictionaryof_BuildItems.Add(Listof_Structures.Commercial_3, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Commercial_Structure, ZoneType = Listof_ZoneType.Commercial, PowerDrain = 1 });
+            Dictionaryof_BuildItems.Add(Listof_Structures.Commercial_4, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Commercial_Structure, ZoneType = Listof_ZoneType.Commercial, PowerDrain = 1 });
+            Dictionaryof_BuildItems.Add(Listof_Structures.Commercial_5, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Commercial_Structure, ZoneType = Listof_ZoneType.Commercial, PowerDrain = 1 });
 
-            Dictionaryof_BuildItems.Add(Listof_Structures.Industrial_1, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Industrial_Structure, ZoneType = Listof_ZoneType.Industrial });
-            Dictionaryof_BuildItems.Add(Listof_Structures.Industrial_2, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Industrial_Structure, ZoneType = Listof_ZoneType.Industrial });
-            Dictionaryof_BuildItems.Add(Listof_Structures.Industrial_3, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Industrial_Structure, ZoneType = Listof_ZoneType.Industrial });
-            Dictionaryof_BuildItems.Add(Listof_Structures.Industrial_4, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Industrial_Structure, ZoneType = Listof_ZoneType.Industrial });
-            Dictionaryof_BuildItems.Add(Listof_Structures.Industrial_5, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Industrial_Structure, ZoneType = Listof_ZoneType.Industrial });
+            Dictionaryof_BuildItems.Add(Listof_Structures.Industrial_1, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Industrial_Structure, ZoneType = Listof_ZoneType.Industrial, PowerDrain = 4 });
+            Dictionaryof_BuildItems.Add(Listof_Structures.Industrial_2, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Industrial_Structure, ZoneType = Listof_ZoneType.Industrial, PowerDrain = 1 });
+            Dictionaryof_BuildItems.Add(Listof_Structures.Industrial_3, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Industrial_Structure, ZoneType = Listof_ZoneType.Industrial, PowerDrain = 1 });
+            Dictionaryof_BuildItems.Add(Listof_Structures.Industrial_4, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Industrial_Structure, ZoneType = Listof_ZoneType.Industrial, PowerDrain = 1 });
+            Dictionaryof_BuildItems.Add(Listof_Structures.Industrial_5, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Texture = Listof_Texture.Industrial_Structure, ZoneType = Listof_ZoneType.Industrial, PowerDrain = 1 });
 
 
-            Dictionaryof_BuildItems.Add(Listof_Structures.PowerPlant1, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Cost = 2500, Texture = Listof_Texture.PowerPlant1, Size = new Point(2, 2) });
+            Dictionaryof_BuildItems.Add(Listof_Structures.PowerPlant1, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Cost = 2500, Texture = Listof_Texture.PowerPlant1, Size = new Point(2, 2), PowerSupply = 200 });
 
 
             //Traffic and Production
+            Dictionaryof_BuildItems[Listof_Structures.PowerPlant1].Traffic.DestJobs = 50;
+            Dictionaryof_BuildItems[Listof_Structures.PowerPlant1].Traffic.DestProducts = 10;
+
+
             Dictionaryof_BuildItems[Listof_Structures.Residential_1].Traffic.OriginJobs = 4;
             Dictionaryof_BuildItems[Listof_Structures.Residential_1].Traffic.DestCommerce = 2;
 

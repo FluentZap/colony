@@ -61,7 +61,7 @@ Population --- >  Jobs	[--- > 	Commerce 	--- > Population
 Tech Level of Population
 Different buildings train population to higher tech levels.
 
-						
+
 						
 						
 						
@@ -341,3 +341,157 @@ Residential		does not have jobs							Relies on Commercial/Industrial
 Industrial		does not have workers						Relies on Residential
 
 
+Population has Wealth and Educations factors
+
+Only low density is available at the start
+
+Game unlocks higher density zone sizes.
+
+
+Build strategies
+Build Tall and have a small but strong empire.
+Build Wide and have large access to resources and verity, also lots of workers/population.
+
+
+What would be cool!
+Clones 			That would make lots of low wealth workers
+Cyborgs
+Androids
+Gene modified
+Telepathy
+
+Unlocking the arcane mysteries of the universe.
+
+
+
+
+Large encompassing tech trees
+Science
+	Biological/Practical
+		Gene Splicing			Per District
+		Creature Creating
+		Cloning
+		Botany
+	Mechanical/Practical
+		Artificial Life			
+		Implants				
+		Cyborgs					
+	Physics/Abstract
+		Energy
+		Research
+		Mathmatics
+Magical
+	Arcane/Abstract
+		Time Control
+		Spell craft
+		Sub Dimensions
+		Energy Control
+	Thaumaturge/Practical
+		Enchanting
+		Building
+		Golomancy
+
+	
+
+Abjuration - may be the same thing as ward magic … or reverse conjuration or reverse invocation … or not.
+Alchemy - which may or may not count as magic
+Apportation - transport magic, sometimes a speciality of summoning, conjuration or something similar.
+Artifice - the creation of magical technology or just magic items.
+Binding magic - perhaps a subschool of invocation or ward magic.
+Biothaumaturgy - may be a subschool of healing or vice versa.
+Charm magic - usually mind effecting magic rather than the creation of luck charms and the like.
+Conjuration magic - making things appear. Sometimes the same as summon magic and the like. Often for summoning inanimate objects only.
+Divination
+Elemental Magic
+Enchantment - a name much fought over. Sometimes the same as artifice and sometimes the same as charm magic.
+Evocation - usually associated with big, showy effects and gratuitous RPG magic like lightning and fireballs.
+Healing Magic
+Illusion - sometimes a subset of charm magic, or at least overlapping in places.
+Invocation - summon magic that takes the creatures summoned seriously.
+Nature Magic
+Necromancy
+Scrying
+Thaumaturgy aka. "Meta-magic".
+Transmutation
+Transformation
+Ward Magic - protective barrier magic, sometimes the same as abjuration.
+
+Functional Magic
+Blood Magic
+Magical Tradition
+Thaumatology - arguably a lot more likely where magic can be this rigidly defined.
+
+
+
+If i could have my way i would make a system that 
+
+
+
+
+
+
+
+Population Markers unlock access to buildings and strategies.
+This could be
+large populations
+high wealth populations
+high education populations
+
+Markers for population,
+Districts have calculations for 
+
+Population are different types.
+
+Most Population has
+
+Wealth
+Education
+
+
+Residential can be built at will. Unemployment contributes to unhappiness.
+Happiness has tiers and the higher the tier the more population can increase.
+The max population influx is based on the total population of a city. With possible boost for other cities on the planet/connected trade routes/gates.
+
+
+
+
+Education does not make higher wealth for residential but will prompt upgrades for industrial buildings.
+Wealth of population increases the need for higher level commercial.
+
+
+
+There are types of education
+They have education limits,
+
+
+As other population types become available they have higher education caps.
+There is only one education type but the population type dictates the Cap and what is required to upgrade.
+
+
+Base Wealth and Wealth Cap is different based on the Population type.
+
+Population creates jobs,
+
+Education buildings slowly raises education and promotes population to higher education classes.
+Education level of workers is a large factor in an industry leveling up.
+
+Wealth determines what commercial building demand is.
+
+Education
+Service coverage
+
+
+
+The basic buildings and population
+
+Education Levels
+	Basic
+	Intermediate
+	Advanced
+Wealth Levels
+	Common		Lower
+	Citizen		Middle
+	Noble		Upper
+
+
+City Center will reflect what type of district it is.

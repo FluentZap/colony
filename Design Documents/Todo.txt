@@ -3,3 +3,7 @@ Todo List
 
 DONE	Prevent Roads from Double connecting
 Add real traffic calculation
+
+
+20 not 16 		2/3-2/9
+25 not 20.16	2/10-2/16
