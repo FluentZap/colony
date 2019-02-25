@@ -8,7 +8,7 @@ namespace Colnaught
     enum Listof_RoadSprites : int
     {
         TopBottomHorizontal,
-        LeftRightHorizontal,        
+        LeftRightHorizontal,
         ThreeWayTop,
         ThreeWayRight,
         ThreeWayBottom,
@@ -64,8 +64,7 @@ namespace Colnaught
         public float DestJobs = 0;
         public float DestCommerce = 0;
         public float DestProducts = 0;
-
-        //Road tiles only have Transfer traffic
+        
 
 
 
@@ -99,9 +98,9 @@ namespace Colnaught
             OriginCommerce = 0;
             OriginProducts = 0;
 
-            DestJobs = 0;
-            DestCommerce = 0;
-            DestProducts = 0;
+            //DestJobs = 0;
+            //DestCommerce = 0;
+            //DestProducts = 0;
 
             Parent = null;
             tier = 0;
@@ -241,6 +240,9 @@ namespace Colnaught
         public int[] Commerce = new int[4];
         public int Products;
 
+        public int PowerSupply;
+        public int PowerDrain;
+
 
         public int Workers = 0;
         public double JobMarket = 0;
@@ -329,13 +331,13 @@ namespace Colnaught
         public Tile_Traffic Projected_Traffic = new Tile_Traffic();
 
         public int WorkersSupply = 0, ProductsSupply = 0, CommerceSupply = 0;
-        public int WorkersDemand = 0, ProductsDemand = 0, CommerceDemand = 0;        
+        public int WorkersDemand = 0, ProductsDemand = 0, CommerceDemand = 0;
 
         public int ExcessProducts = 0;
         public int ExcessCommerce = 0;
 
         public float MaxGrowthRate = 5;
-        
+
         public double WorkerMarket = 0, ProductsMarket = 0, CommerceMarket = 0;
 
 
@@ -361,17 +363,35 @@ namespace Colnaught
                 if (district.Area.Contains(P)) return district;
             return null;
         }
-        
 
 
 
 
 
-
-    public void Calculate_RCI()
+        public void Calculate_Power()
         {
-            
-            
+            foreach (var district in districts)
+            {
+                district.PowerDrain = 0;
+                district.PowerSupply = 0;
+
+                for (int x = district.Area.Left; x < district.Area.Right; x++)
+                    for (int y = district.Area.Top; y < district.Area.Bottom; y++)
+                    {
+                        //Temp setup
+                        City_Tyle T = TileMap[x, y];
+                        district.PowerDrain += _e.Dictionaryof_BuildItems[T.Type].PowerDrain;
+                        district.PowerSupply += _e.Dictionaryof_BuildItems[T.Type].PowerSupply;
+                    }
+
+            }
+
+        }
+
+        public void Calculate_RCI()
+        {
+
+
         }
 
 
@@ -397,9 +417,9 @@ namespace Colnaught
             //CommercialDemand = 0;
             //IndustrialDemand = 0;
 
-            ResidentialDemandCap = 100;
-            CommercialDemandCap = 100;
-            IndustrialDemandCap = 100;
+            ResidentialDemandCap = 0;
+            CommercialDemandCap = 0;
+            IndustrialDemandCap = 0;
 
             foreach (var district in districts)
             {
@@ -483,13 +503,13 @@ namespace Colnaught
                 //IndustrialDemand += (Traff.DestProducts * 1.10) - Traff.OriginProducts - Projected_Traffic.OriginProducts;
 
 
-                ResidentialDemand += 20;
-                CommercialDemand += 20;
-                IndustrialDemand += 20;
+                ResidentialDemand = 1000;
+                //CommercialDemand += 20;
+                //IndustrialDemand += 20;
 
-                if (ResidentialDemand > ResidentialDemandCap) ResidentialDemand = ResidentialDemandCap;
-                if (CommercialDemand > CommercialDemandCap) CommercialDemand = CommercialDemandCap;
-                if (IndustrialDemand > IndustrialDemandCap) IndustrialDemand = IndustrialDemandCap;
+                //if (ResidentialDemand > ResidentialDemandCap) ResidentialDemand = ResidentialDemandCap;
+                //if (CommercialDemand > CommercialDemandCap) CommercialDemand = CommercialDemandCap;
+                //if (IndustrialDemand > IndustrialDemandCap) IndustrialDemand = IndustrialDemandCap;
 
             }
         }
@@ -568,7 +588,7 @@ namespace Colnaught
                                     Built = true;
                                     return true;
                                 }
-                                
+
                                 return false;
                             }
                             //TODO Reverse flow

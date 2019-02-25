@@ -33,7 +33,9 @@ namespace Colnaught
                     {
                         City_Tyle T = TileMap[x, y];
                         //Check and add Traffic Value to Tile
-                        T.Traffic.AddTrafficFrom(_e.Dictionaryof_BuildItems[T.Type].Traffic);
+
+                        //
+                        T.Traffic.AddTrafficFrom(_e.Dictionaryof_BuildItems[T.Type].Traffic);                        
                         
                         if (T.Constructing)
                         {

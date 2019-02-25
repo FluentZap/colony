@@ -37,8 +37,8 @@ namespace Colnaught
     }
 
 
-    enum Listof_ViewInterfaceButtons: int
-    {        
+    enum Listof_ViewInterfaceButtons : int
+    {
         BuildButton1,
         BuildButton2,
         BuildButton3,
@@ -57,7 +57,7 @@ namespace Colnaught
     {
         Panel,
         Button
-    }    
+    }
 
 
 
@@ -229,28 +229,29 @@ namespace Colnaught
                 Typeof_BuildItems BuildData = _e.Dictionaryof_BuildItems[Building];
 
                 //Placed Buildings
-                if (Build == true && BuildData.BuildingType == Listof_BuildTypes.Structure)
+                if (BuildData.BuildingType == Listof_BuildTypes.Structure)
                 {
-                    if (Buildable)
-                    {
-
-                        if (BuildData.Size != new Point(1, 1))
+                    BuildPoint1 = sel_pos;
+                    if (Build)
+                        if (Buildable)
                         {
                             for (int y = 0; y < BuildData.Size.Y; y++)
-                                for (int x = 0; x < BuildData.Size.X; x++)                                
+                                for (int x = 0; x < BuildData.Size.X; x++)
                                 {
-                                    _city.TileMap[sel_pos.X - x, sel_pos.Y - y].Type = Building;
-                                    _city.TileMap[sel_pos.X - x, sel_pos.Y - y].SpriteIndex = x + (y * BuildData.Size.X);
+                                    _city.TileMap[x, y].ClearConnections();
+                                    _city.TileMap[BuildPoint1.X - x, BuildPoint1.Y - y].Type = Building;
+                                    _city.TileMap[BuildPoint1.X - x, BuildPoint1.Y - y].SpriteIndex = x + (y * BuildData.Size.X);                                    
+                                    ConnectTile(new Point(BuildPoint1.X - x, BuildPoint1.Y - y));
                                 }
+
+                            Currency -= BuildCost;
+
+                            MouseLeftClicked = false;
+                            if (Keyboard.GetState().IsKeyUp(Keys.LeftShift) && Keyboard.GetState().IsKeyUp(Keys.RightShift))
+                                MouseMode = Listof_MouseMode.Default;
+
+                            ClearBuild();
                         }
-                        Currency -= BuildCost;
-
-                        MouseLeftClicked = false;
-                        if (Keyboard.GetState().IsKeyUp(Keys.LeftShift) && Keyboard.GetState().IsKeyUp(Keys.RightShift))
-                            MouseMode = Listof_MouseMode.Default;
-
-                        ClearBuild();
-                    }                                           
                 }
 
                 //City Center
@@ -445,6 +446,8 @@ namespace Colnaught
             BuildCost = 0;
 
             Buildable = true;
+            Typeof_BuildItems BuildData = _e.Dictionaryof_BuildItems[Building];
+
             if (B == Listof_BuildTypes.Road)
             {
                 Point P1, P2, P3;
@@ -546,7 +549,7 @@ namespace Colnaught
                 if (!_city.CityArea.Contains(area))
                     Buildable = false;
 
-                BuildCost = _e.Dictionaryof_BuildItems[Building].Cost;
+                BuildCost = BuildData.Cost;
 
             }
 
@@ -554,7 +557,11 @@ namespace Colnaught
 
             if (B == Listof_BuildTypes.Structure)
             {
-                BuildCost = _e.Dictionaryof_BuildItems[Building].Cost;
+                for (int y = 0; y < BuildData.Size.Y; y++)
+                    for (int x = 0; x < BuildData.Size.X; x++)
+                        if (!_city.TileMap[BuildPoint1.X - x, BuildPoint1.Y - y].Buildable) Buildable = false;
+
+                BuildCost = BuildData.Cost;
             }
 
 
@@ -599,7 +606,7 @@ namespace Colnaught
 
                         if (!top && bottom && left && !right) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.CornerTopLeft;
                         if (top && !bottom && !left && right) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.CornerBottomRight;
-                        
+
 
                         //if (top && !bottom && left && !right) _city.TileMap[x, y].SpriteIndex = (int)Listof_RoadSprites.CornerBottomLeft;
 
