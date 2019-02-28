@@ -14,7 +14,8 @@ namespace Colnaught
         CommercialZone,
         IndustrialZone,
         Road1,
-        PowerPlant
+        PowerPlant,
+        School1
     }
 
     class TechItem
@@ -34,7 +35,7 @@ namespace Colnaught
         Residentail,
         Commercial,
         Industrial,
-        PowerPlant
+        PowerPlant        
     }
 
     class BuildButtonTech
@@ -64,6 +65,8 @@ namespace Colnaught
             BuildingTech.Add(Listof_TechItems.Road1, new BuildButtonTech() { Category = Listof_BuildTabCategories.Roads, BuildItem = Listof_Structures.RoadDirt, BuildIcon = Listof_BuildIconTexture.Road });
 
             BuildingTech.Add(Listof_TechItems.PowerPlant, new BuildButtonTech() { Category = Listof_BuildTabCategories.Power, BuildItem = Listof_Structures.PowerPlant1, BuildIcon = Listof_BuildIconTexture.Road });
+
+            BuildingTech.Add(Listof_TechItems.School1, new BuildButtonTech() { Category = Listof_BuildTabCategories.Power, BuildItem = Listof_Structures.School1, BuildIcon = Listof_BuildIconTexture.Residentail });
         }
 
 

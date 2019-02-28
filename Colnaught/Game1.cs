@@ -21,6 +21,8 @@ namespace Colnaught
         Industrial_Structure,
         Construction,
         PowerPlant1,
+        School1,
+
 
         ButtonIcons,
         Panel1 = 300,
@@ -155,6 +157,8 @@ namespace Colnaught
             TileTexture[(int)Listof_Texture.Construction] = Content.Load<Texture2D>("Construction1");
 
             TileTexture[(int)Listof_Texture.PowerPlant1] = Content.Load<Texture2D>("PowerPlant_2");
+
+            TileTexture[(int)Listof_Texture.School1] = Content.Load<Texture2D>("School_1");
 
             TileTexture[(int)Listof_Texture.ButtonIcons] = Content.Load<Texture2D>("BuildingIcons");
             
