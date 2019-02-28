@@ -22,10 +22,11 @@ namespace Colnaught
             Projected_Traffic.Clear();
             foreach (var district in districts)
             {
+                /*
                 for (int x = district.Area.Left; x < district.Area.Right; x++)
                     for (int y = district.Area.Top; y < district.Area.Bottom; y++)
                         TileMap[x, y].Traffic.Clear();
-
+                 */
 
                 //Add traffic and get ConnectedList
                 for (int x = district.Area.Left; x < district.Area.Right; x++)
@@ -33,14 +34,13 @@ namespace Colnaught
                     {
                         City_Tyle T = TileMap[x, y];
                         //Check and add Traffic Value to Tile
-
-                        //
-                        T.Traffic.AddTrafficFrom(_e.Dictionaryof_BuildItems[T.Type].Traffic);                        
+                        
+                        //T.Traffic.AddTrafficFrom(T.Traffic);
                         
                         if (T.Constructing)
                         {
-                            Projected_Traffic.AddTrafficFrom(T.Traffic);
-                            T.Traffic.Clear();
+                            Projected_Traffic.AddTrafficFrom(_e.Dictionaryof_BuildItems[T.Type].Traffic);
+                            //T.Traffic.Clear();
                         }
 
                     }

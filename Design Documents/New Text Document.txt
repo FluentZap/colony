@@ -477,8 +477,9 @@ Education level of workers is a large factor in an industry leveling up.
 
 Wealth determines what commercial building demand is.
 
-Education
-Service coverage
+Services
+Land Value
+
 
 
 
@@ -489,9 +490,31 @@ Education Levels
 	Intermediate
 	Advanced
 Wealth Levels
-	Common		Lower
-	Citizen		Middle
-	Noble		Upper
+	Worker		Lower
+	Common		Middle
+	Elite		Upper
+
+	
+	
+Population 3 types of traffic
+Education 3 types
+
+
+Slowly build the education amount in the city.
 
 
 City Center will reflect what type of district it is.
+
+
+The Basic Cycle is
+
+Jobs		Basic	Intermediate	Advanced
+Workers		$		$$				$$$
+
+
+Commerce	$		$$				$$$
+Products	Basic	Intermediate	Advanced
+
+
+
+Invest in Education to increase tech level in city.
