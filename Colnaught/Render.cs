@@ -331,7 +331,7 @@ namespace Colnaught
 
             //spriteBatch.DrawString(basicfont, "SS: " + Screen_Scroll.ToString(), new Vector2(0, 140), Color.White);
 
-            spriteBatch.DrawString(basicfont, "CenterTile: " + CenterTile.ToString(), new Vector2(0, 160), Color.White);
+            //spriteBatch.DrawString(basicfont, "CenterTile: " + CenterTile.ToString(), new Vector2(0, 160), Color.White);
 
 
             decimal unemp = 0;
@@ -377,7 +377,7 @@ namespace Colnaught
                 spriteBatch.DrawString(basicfont, "Education: " + district.Education[0].ToString(), new Vector2(800, 60), Color.White);
                 spriteBatch.DrawString(basicfont, "Education Growth: " + district.EducationGrowth[0].ToString(), new Vector2(800, 80), Color.White);
 
-                spriteBatch.DrawString(basicfont, "Worker Overflow: " + _city.ResidentialGrowthOverflow.ToString(), new Vector2(800, 100), Color.White);
+                spriteBatch.DrawString(basicfont, "WorkerGrowth: " + _city.ResidentialGrowth.ToString(), new Vector2(800, 100), Color.White);
 
                 //spriteBatch.DrawString(basicfont, "Workers: " + district.Workers.ToString(), new Vector2(300, 0), Color.White);
                 //spriteBatch.DrawString(basicfont, "Jobs: " + district.Jobs[0].ToString(), new Vector2(300, 20), Color.White);

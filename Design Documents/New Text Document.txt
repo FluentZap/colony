@@ -518,3 +518,12 @@ Products	Basic	Intermediate	Advanced
 
 
 Invest in Education to increase tech level in city.
+
+
+Value List
+
+1	0-249
+2	250-499
+3	500-749
+4	750-999
+5	1000
