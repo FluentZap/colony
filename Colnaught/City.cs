@@ -620,8 +620,20 @@ namespace Colnaught
                     WorkerHappiness = 0;
                 else
                     WorkerHappiness = Math.Floor((10 + Traff.OriginJobsWorker * 0.001));
+                if (Traff.Housing == 0)
+                    WorkerHappiness = 0;
 
-                ResidentialGrowth = Math.Floor(WorkerHappiness);
+                ResidentialGrowth += Math.Floor(WorkerHappiness);
+
+
+
+
+                //if (ResidentialGrowth > 0 && WorkersSupply > 0 && WorkersDemand > 0)
+                    //ResidentialGrowthOverflow += ResidentialGrowth;
+
+                if (WorkersSupply > 0 && ResidentialGrowth > WorkersSupply * 0.1)
+                    ResidentialGrowth = WorkersSupply * 0.1;
+
 
 
 
@@ -739,7 +751,7 @@ namespace Colnaught
                             if (Tile.Traffic.OriginJobsWorker +
                                 Tile.Traffic.OriginJobsCommoner +
                                 Tile.Traffic.OriginJobsElite
-                                < _e.Dictionaryof_BuildItems[Tile.Type].Traffic.OriginJobsWorker && ResidentialGrowth > 0 && Tile.Constructing == false)
+                                < _e.Dictionaryof_BuildItems[Tile.Type].Traffic.Housing && Tile.Constructing == false && ResidentialGrowth > 0)
                             {
                                 Tile.Traffic.OriginJobsWorker++;
                                 ResidentialGrowth--;
@@ -780,9 +792,8 @@ namespace Colnaught
                                     return true;
                                 }
                                
-                                if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_1 && ResidentialGrowthOverflow > 40)
-                                {
-                                    ResidentialGrowthOverflow -= 40;
+                                if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_1 && ResidentialGrowth > 40)
+                                {                                    
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Residential_2;
                                     TileMap[t.X, t.Y].SpriteIndex = 2;
                                     TileMap[t.X, t.Y].Constructing = true;
@@ -790,9 +801,8 @@ namespace Colnaught
                                     return true;
                                 }
 
-                                if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_2 && ResidentialGrowthOverflow > 400)
-                                {
-                                    ResidentialGrowthOverflow -= 400;
+                                if (TileMap[t.X, t.Y].Type == Listof_Structures.Residential_2 && ResidentialGrowth > 400)
+                                {                                    
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Residential_3;
                                     TileMap[t.X, t.Y].SpriteIndex = 4;
                                     TileMap[t.X, t.Y].Constructing = true;
@@ -847,7 +857,7 @@ namespace Colnaught
                                 if (TileMap[t.X, t.Y].Type == Listof_Structures.Commercial_1 && CommercialDemandWorker >= 80)
                                 {
                                     TileMap[t.X, t.Y].Type = Listof_Structures.Commercial_2;
-                                    TileMap[t.X, t.Y].SpriteIndex = 4;
+                                    TileMap[t.X, t.Y].SpriteIndex = 2;
                                     TileMap[t.X, t.Y].Constructing = true;
                                     Built = true;
                                     return true;
@@ -932,12 +942,13 @@ namespace Colnaught
                 }
             }
 
-
+            /*
             if (ResidentialGrowth > 0 && WorkersSupply > 0 && WorkersDemand > 0)
                 ResidentialGrowthOverflow += ResidentialGrowth;
+
             if (ResidentialGrowthOverflow > WorkersSupply * 0.1)
                 ResidentialGrowthOverflow = WorkersSupply * 0.1;
-
+            */
 
 
 
