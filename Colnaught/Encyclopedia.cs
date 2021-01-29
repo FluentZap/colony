@@ -85,45 +85,20 @@ namespace Colnaught
             Dictionaryof_BuildItems.Add(Listof_Structures.School1, new Typeof_BuildItems() { BuildingType = Listof_BuildTypes.Structure, Cost = 2500, Texture = Listof_Texture.School1, Size = new Point(2, 2), Education = new int[4] { 10, 0, 0, 0 } });
 
             //Traffic and Production
-            Dictionaryof_BuildItems[Listof_Structures.PowerPlant1].Traffic.DestJobsWorker = 50;
-            Dictionaryof_BuildItems[Listof_Structures.PowerPlant1].Traffic.DestProducts = 10;
+            Dictionaryof_BuildItems[Listof_Structures.PowerPlant1].Traffic = new Tile_Traffic() { DestJobsWorker = 50, DestProducts = 10 };
+
+            Dictionaryof_BuildItems[Listof_Structures.Residential_1].Traffic = new Tile_Traffic() { Housing = 4, OriginJobsWorker = 4, DestCommerceWorker = 2 };
+            Dictionaryof_BuildItems[Listof_Structures.Residential_2].Traffic = new Tile_Traffic() { Housing = 40, OriginJobsWorker = 40, DestCommerceWorker = 20 };
+            Dictionaryof_BuildItems[Listof_Structures.Residential_3].Traffic = new Tile_Traffic() { Housing = 400, OriginJobsWorker = 400, DestCommerceWorker = 200 };
+            Dictionaryof_BuildItems[Listof_Structures.Residential_4].Traffic = new Tile_Traffic() { Housing = 32, OriginJobsWorker = 32, DestCommerceWorker = 16 };
+            Dictionaryof_BuildItems[Listof_Structures.Residential_5].Traffic = new Tile_Traffic() { Housing = 64, OriginJobsWorker = 64, DestCommerceWorker = 32 };
 
 
-            Dictionaryof_BuildItems[Listof_Structures.Residential_1].Traffic.Housing = 4;
-            Dictionaryof_BuildItems[Listof_Structures.Residential_1].Traffic.OriginJobsWorker = 4;
-            Dictionaryof_BuildItems[Listof_Structures.Residential_1].Traffic.DestCommerceWorker = 2;
+            Dictionaryof_BuildItems[Listof_Structures.Commercial_1].Traffic = new Tile_Traffic() { DestJobsWorker = 6, DestProducts = 5, OriginCommerceWorker = 8 };
+            Dictionaryof_BuildItems[Listof_Structures.Commercial_2].Traffic = new Tile_Traffic() { DestJobsWorker = 60, DestProducts = 50, OriginCommerceWorker = 80 };
 
-            Dictionaryof_BuildItems[Listof_Structures.Residential_2].Traffic.Housing = 40;
-            Dictionaryof_BuildItems[Listof_Structures.Residential_2].Traffic.OriginJobsWorker = 40;
-            Dictionaryof_BuildItems[Listof_Structures.Residential_2].Traffic.DestCommerceWorker = 20;
-
-            Dictionaryof_BuildItems[Listof_Structures.Residential_3].Traffic.Housing = 400;
-            Dictionaryof_BuildItems[Listof_Structures.Residential_3].Traffic.OriginJobsWorker = 400;
-            Dictionaryof_BuildItems[Listof_Structures.Residential_3].Traffic.DestCommerceWorker = 200;
-
-            Dictionaryof_BuildItems[Listof_Structures.Residential_4].Traffic.Housing = 32;
-            Dictionaryof_BuildItems[Listof_Structures.Residential_4].Traffic.OriginJobsWorker = 32;
-            Dictionaryof_BuildItems[Listof_Structures.Residential_4].Traffic.DestCommerceWorker = 16;
-
-            Dictionaryof_BuildItems[Listof_Structures.Residential_5].Traffic.Housing = 64;
-            Dictionaryof_BuildItems[Listof_Structures.Residential_5].Traffic.OriginJobsWorker = 64;
-            Dictionaryof_BuildItems[Listof_Structures.Residential_5].Traffic.DestCommerceWorker = 32;
-
-            Dictionaryof_BuildItems[Listof_Structures.Commercial_1].Traffic.DestJobsWorker = 6;
-            Dictionaryof_BuildItems[Listof_Structures.Commercial_1].Traffic.DestProducts = 5;
-            Dictionaryof_BuildItems[Listof_Structures.Commercial_1].Traffic.OriginCommerceWorker = 8;
-
-            Dictionaryof_BuildItems[Listof_Structures.Commercial_2].Traffic.DestJobsWorker = 60;
-            Dictionaryof_BuildItems[Listof_Structures.Commercial_2].Traffic.DestProducts = 50;
-            Dictionaryof_BuildItems[Listof_Structures.Commercial_2].Traffic.OriginCommerceWorker = 80;
-
-            Dictionaryof_BuildItems[Listof_Structures.Industrial_1].Traffic.DestJobsWorker = 20;
-            Dictionaryof_BuildItems[Listof_Structures.Industrial_1].Traffic.OriginProducts = 10;
-
-            Dictionaryof_BuildItems[Listof_Structures.Industrial_2].Traffic.DestJobsWorker = 40;
-            Dictionaryof_BuildItems[Listof_Structures.Industrial_2].Traffic.DestJobsCommoner = 20;
-            Dictionaryof_BuildItems[Listof_Structures.Industrial_2].Traffic.OriginProducts = 40;
-
+            Dictionaryof_BuildItems[Listof_Structures.Industrial_1].Traffic = new Tile_Traffic() { DestJobsWorker = 20, OriginProducts = 10};            
+            Dictionaryof_BuildItems[Listof_Structures.Industrial_2].Traffic = new Tile_Traffic() { DestJobsWorker = 40, DestJobsCommoner = 20, OriginProducts = 40 };
         }
 
 

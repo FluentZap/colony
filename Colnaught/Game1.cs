@@ -113,10 +113,10 @@ namespace Colnaught
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            graphics.PreferredBackBufferWidth = 1920;
-            graphics.PreferredBackBufferHeight = 1080;
-            Screen_Size.X = 1920;
-            Screen_Size.Y = 1080;
+            graphics.PreferredBackBufferWidth = 2560;
+            graphics.PreferredBackBufferHeight = 1440;
+            Screen_Size.X = 2560;
+            Screen_Size.Y = 1440;
             
             graphics.ApplyChanges();
 

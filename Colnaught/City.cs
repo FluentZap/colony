@@ -406,6 +406,7 @@ namespace Colnaught
         public int ExcessProducts = 0;
         public int ExcessCommerce = 0;
 
+        // How many buildings can be in production of each type, each day.
         public float MaxGrowthRate = 5;
 
         public double WorkerMarket = 0, ProductsMarket = 0, CommerceMarket = 0;
@@ -606,7 +607,7 @@ namespace Colnaught
 
                 Unemployment *= 100;
 
-
+                // WorkerHappiness sets move in rates, they will move in based on the job market up to 10 + 1% of population over the jobs available.
                 double WorkerHappiness = ((100 + Traff.DestJobsWorker) * 1.1) / (100 + Traff.OriginJobsWorker);
                 if (WorkerHappiness > 1) WorkerHappiness = 1;
                 WorkerHappiness -= 0.9;
@@ -728,7 +729,8 @@ namespace Colnaught
 
                 for (int v = 255; v >= 0; v--)
                 {
-                    //One at a time                    
+                    //One at a time
+                    //Check all tiles in the district based on value highest to lowest
                     if (district.ValueList[v].Count > 0)
                     {
                         foreach (var t in district.ValueList[v])
@@ -748,6 +750,7 @@ namespace Colnaught
                             if (IndustrialDemandIntermediate > 0 && IGrowthLimit <= MaxGrowthRate)
                                 if (Grow_Industrial()) { IndustrialDemandIntermediate -= _e.Dictionaryof_BuildItems[TileMap[t.X, t.Y].Type].Traffic.DestJobsCommoner; IGrowthLimit++; }
 
+                            // If a worker can move in to the building and there is residential growth add a basic a worker class citizen
                             if (Tile.Traffic.OriginJobsWorker +
                                 Tile.Traffic.OriginJobsCommoner +
                                 Tile.Traffic.OriginJobsElite
@@ -757,7 +760,8 @@ namespace Colnaught
                                 ResidentialGrowth--;
                             }
 
-                            //If the district has enought education growth upgrade the education of a pop.
+                            //If the district has enough education growth, upgrade the education of a pop.
+                            //Because of highest land value first growth, the high value areas will have the most educated workers first
                             if (district.EducationGrowth[0] >= 10 && _e.Dictionaryof_BuildItems[Tile.Type].ZoneType == Listof_ZoneType.Residential && Tile.Traffic.OriginJobsWorker >= 1)
                             {
                                 Tile.Traffic.OriginJobsWorker--;
